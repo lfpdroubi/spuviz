@@ -80,6 +80,15 @@
           }
         })
         
+        var ocupacoes = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/ocupacoes.geojson",
+          dataType: "json",
+          success: console.log("Cessions data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
+        
         var LLTM_DEMARCADA = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/linhas/LLTM_DEMARCADA.geojson",
           dataType: "json",
@@ -135,8 +144,9 @@
         })
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
-        $.when(eez, cz, ts, iw, portos, cessoes, LLTM_DEMARCADA, LLTM_HOMOLOGADA, 
-        LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA).done(function() {
+        $.when(eez, cz, ts, iw, portos, cessoes, ocupacoes, LLTM_DEMARCADA, 
+        LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, 
+        LPM_PRESUMIDA).done(function() {
             var OpenStreetMap_DE = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -206,6 +216,11 @@
 
             var Cessoes = L.geoJSON(cessoes.responseJSON, {
                 color: 'red',
+                weight: 1 }).
+            addTo(map);
+            
+          var Ocupacoes = L.geoJSON(ocupacoes.responseJSON, {
+                color: 'royalblue',
                 weight: 1 }).
             addTo(map);
             
