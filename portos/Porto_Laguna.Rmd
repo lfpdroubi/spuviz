@@ -34,8 +34,7 @@ conn <- dbConnect("PostgreSQL",
 # Obs.: Da poliganal abaixo são extraídos pontos dos vértices. 
 # É necessário confeccionar manualmente o polígono.
 #  
-pts <- st_read("portos/Laguna/Area do porto organizado de Laguna.kml") %>%
-  st_transform(crs = 31982) # Transforma para SIRGAS2000
+pts <- st_read("laguna/poligonal_atual.kml")
 #
 # 1.2 Extração das coordenadas
 #
@@ -50,7 +49,7 @@ pl <- st_polygon(list(coords))
 #
 # 1.5 Criar feição
 #
-pl <- st_sfc(pl, crs = 31982)
+pl <- st_sfc(pl, crs = 4326)
 #
 # 2. Criação dos atributos  
 #
@@ -69,50 +68,10 @@ spl_df <- st_sf(attr,
                 geom = pl)
 ```
 
-## Escrever a nova entrada no BDE
+## Exportar
 
 ```{r}
-st_write(spl_df,
-         dsn = conn,
-         layer = c("espacoaquatico", "portos"),
-         append = TRUE)
+# 5. Escrever a nova entrada no BDE
+#
+st_write(spl_df, "laguna.geojson", delete_dsn = TRUE)
 ```
-
-## Verificar
-
-```{r}
-# Portos no município de Itajaí
-portos <- st_read(conn,
-                  query = "SELECT * FROM espacoaquatico.portos
-                  WHERE municipio = 8185;") %>%
-    st_transform(crs = 4326)
-```
-
-
-```{r, echo = FALSE, message=FALSE, warning=FALSE, out.width="90%"}
-m <- portos %>%   
-  leaflet() %>%
-  # Base Groups
-  addTiles(group = "OSM (default)") %>%
-  addProviderTiles(providers$Esri.NatGeoWorldMap, group = "Esri") %>%
-  addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
-  addPolygons(group = "Portos", color = "orange") %>%
-  addScaleBar(position = 'bottomleft', options = list(imperial = FALSE)) %>%
-  addGraticule(interval = .05, style = list(weight = .2)) %>%
-  addMiniMap(position = "topleft", zoomLevelOffset = -3)  %>%
-  # Layers control
-  addLayersControl(
-    baseGroups = c("OSM (default)", "Esri", "Toner Lite"),
-    options = layersControlOptions(collapsed = FALSE)
-  )
-mapview::mapshot(m, file = "./map.png", remove_controls = NULL)
-knitr::include_graphics("map.png")
-```
-
-
-## Desconectar do BDE
-
-```{r}
-dbDisconnect(conn)
-```
-
