@@ -15,7 +15,7 @@
    }
     </style>
 </head>
-
+<meta charset="UTF-8">
 <body>
     <div id="map"></div>
     <!-- Add jQuery -->
@@ -218,10 +218,10 @@
               },
               onEachFeature: function( feature, layer ){
                              layer.bindPopup(
-                               "<b>Descricao: </b>" + feature.properties.descricao + "<br>" + 
+                               "<b>Descrição: </b>" + feature.properties.descricao + "<br>" + 
                                "<b>Portaria: </b>" + feature.properties.portaria + "<br>" + 
                                "<b>Data: </b>" + feature.properties.data + "<br>" + 
-                               "<b>fonte: </b>" + "<a href=" + feature.properties.fonte + ">Link para portaria.</a>"
+                               "<b>Fonte: </b>" + "<a href=" + feature.properties.fonte + ">Link para portaria.</a>"
                                );
                   
                 }
@@ -241,8 +241,8 @@
                                "<b>CNPJ: </b>" + feature.properties.cnpj + "<br>" + 
                                "<b>Protocolo: </b>" + feature.properties.protocolo + "<br>" + 
                                "<b>NUP: </b>" + feature.properties.nup + "<br>" + 
-                               "<b>Referencia: </b>" + feature.properties.ref + "<br>" +
-                               "<b>Area: </b>" + feature.properties.area + "<br>"
+                               "<b>Referência: </b>" + feature.properties.ref + "<br>" +
+                               "<b>Área: </b>" + feature.properties.area + "<br>"
                                );
                   
                 }
