@@ -209,15 +209,45 @@
             addTo(map);  
             
             var Portos = L.geoJSON(portos.responseJSON, {
-                fillOpacity: .25,
-                color: 'orange',
-                weight: 0.75 }).
-            addTo(map);
+              style: function(feature) {
+                return{
+                  fillOpacity: .25,
+                  color: 'orange',
+                  weight: 0.75 
+                }
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Descricao: </b>" + feature.properties.descricao + "<br>" + 
+                               "<b>Portaria: </b>" + feature.properties.portaria + "<br>" + 
+                               "<b>Data: </b>" + feature.properties.data + "<br>" + 
+                               "<b>fonte: </b>" + "<a href=" + feature.properties.fonte + ">Link para portaria.</a>"
+                               );
+                  
+                }
+                }
+                ).addTo(map);
 
             var Cessoes = L.geoJSON(cessoes.responseJSON, {
-                color: 'red',
-                weight: 1 }).
-            addTo(map);
+                style: function(feature) {
+                  return{
+                    color: 'red',
+                    weight: 1   
+                  }
+                },
+                onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Interessado: </b>" + feature.properties.interessado + "<br>" + 
+                               "<b>CNPJ: </b>" + feature.properties.cnpj + "<br>" + 
+                               "<b>Protocolo: </b>" + feature.properties.protocolo + "<br>" + 
+                               "<b>NUP: </b>" + feature.properties.nup + "<br>" + 
+                               "<b>Referencia: </b>" + feature.properties.ref + "<br>" +
+                               "<b>Area: </b>" + feature.properties.area + "<br>"
+                               );
+                  
+                }
+                }
+                ).addTo(map);
             
           var Ocupacoes = L.geoJSON(ocupacoes.responseJSON, {
                 color: 'royalblue',
