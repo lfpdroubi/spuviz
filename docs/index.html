@@ -244,7 +244,7 @@
                                "<b>Protocolo: </b>" + feature.properties.protocolo + "<br>" + 
                                "<b>NUP: </b>" + feature.properties.nup + "<br>" + 
                                "<b>Referência: </b>" + feature.properties.ref + "<br>" +
-                               "<b>Área: </b>" + feature.properties.area + "<br>"
+                               "<b>Área: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 })
                                );
                   
                 }
