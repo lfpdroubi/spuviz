@@ -34,7 +34,7 @@ conn <- dbConnect("PostgreSQL",
 # Obs.: Da poliganal abaixo são extraídos pontos dos vértices. 
 # É necessário confeccionar manualmente o polígono.
 #  
-pts <- st_read("laguna/poligonal_atual.kml")
+pts <- st_read("laguna/poligonal.kml")
 #
 # 1.2 Extração das coordenadas
 #
@@ -56,10 +56,10 @@ pl <- st_sfc(pl, crs = 4326)
 attr <- data.frame(descricao = "Área do Porto Organizado de Laguna",
                    area = st_area(pl),
                    municipio = 8185,
-                   portaria = 1008,
-                   data = as.Date("16/12/1993", format = "%d/%m/%Y"),
-                   fonte = "http://infraestrutura.gov.br/images/arquivos-poligonais-das-areas-dos-portos-organizados/copy_of_laguna.zip",
-                   data_acesso = as.Date("11/09/2019", format = "%d/%m/%Y")
+                   portaria = 587,
+                   data = as.Date("05/12/2019", format = "%d/%m/%Y"),
+                   fonte = "http://infraestrutura.gov.br/images/arquivos-poligonais-das-areas-dos-portos-organizados/Laguna.zip",
+                   data_acesso = as.Date("30/01/2019", format = "%d/%m/%Y")
                    )
 #
 # 4. União dos atributos à geometria
