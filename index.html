@@ -10,6 +10,7 @@
         crossorigin=""/>
     <link rel="stylesheet" href="./node_modules/leaflet-search/dist/leaflet-search.src.css" />
     <link rel="stylesheet" href="./node_modules/leaflet.mousecoordinate/dist/leaflet.mousecoordinate.css" />
+    <link rel="stylesheet" href="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css" />
     
     <!-- Add jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -20,6 +21,7 @@
     <!-- Add Leaflet Plugins -->
     <script src="./node_modules/leaflet-search/dist/leaflet-search.src.js"></script>
     <script src="./node_modules/leaflet.mousecoordinate/dist/leaflet.mousecoordinate.js"></script>
+    <script src="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script>
       
     <style type="text/css">
      #map {
@@ -186,15 +188,6 @@
                 layers: [OpenTopoMap, wmsLayer, OpenStreetMap_DE, Esri_WorldImagery]
             });
 
-            var baseLayers = {
-                "OpenTopo": OpenTopoMap,
-                "SIG-SC": wmsLayer,
-                "Esri World Imagery": Esri_WorldImagery,
-                "OpenStreet": OpenStreetMap_DE
-                };
-
-            L.control.layers(baseLayers).addTo(map);
-            
             // Add requested external GeoJSON to map
             var EEZ = L.geoJSON(eez.responseJSON, {
                 color: 'green',
@@ -301,6 +294,32 @@
                 opacity: .25,
                 dashArray: "20 20"}).
             addTo(map);  
+            
+            var baseLayers = {
+                "OpenTopo": OpenTopoMap,
+                "SIG-SC": wmsLayer,
+                "Esri World Imagery": Esri_WorldImagery,
+                "OpenStreet": OpenStreetMap_DE
+                };
+                
+            var groupedOverlays = {
+              "Destinação": {
+                "Ocupações": Ocupacoes,
+                "Cessões": Cessoes,
+                "Portos": Portos
+              },
+              "Linhas": {
+              "LPM Homologada": LPM_HOM,
+              "LPM Demarcada": LPM_DEM,
+              "LPM Presumida": LPM_PRE,
+              "LLTM Homologada": LLTM_HOM,
+              "LLTM Demarcada": LLTM_DEM,
+              "LLTM Presumida": LLTM_PRE
+              }
+              
+            };
+
+            L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
             
             var searchControl = new L.Control.Search({
 		          layer: Cessoes,
