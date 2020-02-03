@@ -239,6 +239,71 @@
               }
             };
 
+            var EEZ = L.geoJSON(eez.responseJSON, {
+              style: {
+                color: 'Aquamarine',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN)" + "<br>" +
+                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez >Link.</a>" + "<br>" +
+                               "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental de jun/2019."
+                               );
+                }
+              }
+              ).addTo(map);
+
+            var CZ = L.geoJSON(cz.responseJSON, {
+              style:{
+                color: 'Aqua',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Descrição: </b>" + "Zona Contígua (24 MN)" + "<br>" +
+                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez_24nm >Link.</a>" + "<br>" +
+                               "<b>Obs.: </b>" + "-."
+                               );
+                }
+              }
+              ).addTo(map);
+
+            var TS = L.geoJSON(ts.responseJSON, {
+              style:{
+                color: 'navy',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Descrição: </b>" + "Mar Territorial (12 MN)" + "<br>" +
+                               "<b>Fonte: </b>" + "<a href=  http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez_12nm >Link.</a>" + "<br>" +
+                               "<b>Obs.: </b>" + "-."
+                               );
+                }
+              }
+              ).addTo(map);
+
+
+            var IW = L.geoJSON(iw.responseJSON, {
+              style:{
+                color: 'royalblue',
+                weight: 2,
+                fillOpacity: .25
+              },
+                onEachFeature: function( feature, layer ){
+                               layer.bindPopup(
+                                 "<b>Descrição: </b>" + "Águas Internas (12 MN)" + "<br>" +
+                                 "<b>Fonte: </b>" + "<a href=  http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez_internal_waters >Link.</a>" + "<br>" +
+                                 "<b>Obs.: </b>" + "-."
+                                 );
+                  }
+                }
+                ).addTo(map);
+
             var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
               style: areaStyle,
               onEachFeature: function( feature, layer ){
@@ -270,30 +335,6 @@
                   }
                 }
                 ).addTo(map);
-
-            var EEZ = L.geoJSON(eez.responseJSON, {
-                color: 'Aquamarine',
-                weight: 2,
-                fillOpacity: .25}).
-            addTo(map);
-
-            var CZ = L.geoJSON(cz.responseJSON, {
-                color: 'Aqua',
-                weight: 2,
-                fillOpacity: .25}).
-            addTo(map);
-
-            var TS = L.geoJSON(ts.responseJSON, {
-                color: 'navy',
-                weight: 2,
-                fillOpacity: .25}).
-            addTo(map);
-
-            var IW = L.geoJSON(iw.responseJSON, {
-                color: 'royalblue',
-                weight: 2,
-                fillOpacity: .25}).
-            addTo(map);
 
             var Portos = L.geoJSON(portos.responseJSON, {
               style: function(feature) {
