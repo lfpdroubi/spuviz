@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./node_modules/leaflet-search/dist/leaflet-search.src.css" />
     <link rel="stylesheet" href="./node_modules/leaflet.mousecoordinate/dist/leaflet.mousecoordinate.css" />
     <link rel="stylesheet" href="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css" />
+    <link rel="stylesheet" href="./leaflet-mapkey-icon/dist/MapkeyIcons.css" />
 
     <!-- Add jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -23,6 +24,7 @@
     <script src="./node_modules/leaflet-search/dist/leaflet-search.src.js"></script>
     <script src="./node_modules/leaflet.mousecoordinate/dist/leaflet.mousecoordinate.js"></script>
     <script src="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script>
+    <script src="./leaflet-mapkey-icon/dist/L.Icon.Mapkey.js"></script>
 
     <style type="text/css">
      #map {
@@ -116,7 +118,16 @@
         var ocupacoes = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/ocupacoes.geojson",
           dataType: "json",
-          success: console.log("Cessions data successfully loaded."),
+          success: console.log("Ocupations data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
+        
+        var certdisp = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/certdisp.geojson",
+          dataType: "json",
+          success: console.log("CertDisp data successfully loaded."),
           error: function (xhr) {
             alert(xhr.statusText)
           }
@@ -175,11 +186,20 @@
             alert(xhr.statusText)
           }
         })
+        
+        var transporte_aquaviario = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/transporte-aquaviario.geojson",
+          dataType: "json",
+          success: console.log("transporte_aquaviario data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
-        $.when(eez, cz, ts, iw, portos, cessoes, ocupacoes, LLTM_DEMARCADA,
-        LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA,
-        LPM_PRESUMIDA).done(function() {
+        $.when(municipios, uc, eez, cz, ts, iw, portos, cessoes, ocupacoes, 
+        certdisp, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
+        LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
             var OpenStreetMap_DE = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
                 maxZoom: 18,
@@ -316,6 +336,23 @@
                   }
                 }
                 ).addTo(map);
+                
+            var CertDisp = L.geoJSON(certdisp.responseJSON, {
+              style:{
+                color: 'AntiqueWhite',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
+                               "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+                               "<b>Concedida: </b>" + feature.properties.concedida  + "<br>"
+                               );
+
+              }
+            }
+            ).addTo(map);
 
             var UC = L.geoJSON(uc.responseJSON, {
               style:{
@@ -416,7 +453,18 @@
                 opacity: .25,
                 dashArray: "20 20"}).
             addTo(map);
-
+            
+            // Creating MapkeyIcon object
+            var balsa = L.icon.mapkey({icon:"sailboat"})
+            
+            var Balsas = L.geoJSON(transporte_aquaviario.responseJSON, {
+                icon: balsa,
+                color: 'grey',
+                weight: 2,
+                opacity: .55,
+                dashArray: "20 20"}).
+            addTo(map);
+              
             var baseLayers = {
                 "OpenTopo": OpenTopoMap,
                 "Esri World Imagery": Esri_WorldImagery,
@@ -428,7 +476,8 @@
               "Destinação": {
                 "Portos": Portos,
                 "Cessões": Cessoes,
-                "Ocupações": Ocupacoes
+                "Ocupações": Ocupacoes,
+                "Certidões de Disponibilidade": CertDisp
               },
               "Limites territoriais":{
                 "Municípios": MUNICIPIOS,
