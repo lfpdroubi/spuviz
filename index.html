@@ -118,7 +118,7 @@
         var ocupacoes = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/ocupacoes.geojson",
           dataType: "json",
-          success: console.log("Cessions data successfully loaded."),
+          success: console.log("Ocupations data successfully loaded."),
           error: function (xhr) {
             alert(xhr.statusText)
           }
@@ -197,9 +197,9 @@
         })
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
-        $.when(eez, cz, ts, iw, portos, cessoes, ocupacoes, LLTM_DEMARCADA,
-        LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA,
-        LPM_PRESUMIDA).done(function() {
+        $.when(municipios, uc, eez, cz, ts, iw, portos, cessoes, ocupacoes, 
+        certdisp, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
+        LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
             var OpenStreetMap_DE = L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
                 maxZoom: 18,
@@ -340,8 +340,8 @@
             var CertDisp = L.geoJSON(certdisp.responseJSON, {
               style:{
                 color: 'AntiqueWhite',
-                weight: 1,
-                fillOpacity: .15
+                weight: 2,
+                fillOpacity: .25
               },
               onEachFeature: function( feature, layer ){
                              layer.bindPopup(
@@ -455,12 +455,10 @@
             addTo(map);
             
             // Creating MapkeyIcon object
-            //var balsa = L.icon.mapkey({icon:"sailboat"})
+            var balsa = L.icon.mapkey({icon:"sailboat"})
             
             var Balsas = L.geoJSON(transporte_aquaviario.responseJSON, {
-              pointToLayer: function (feature, latlng) {
-                return L.icon.mapkey({icon:"sailboat"})
-              },
+                icon: balsa,
                 color: 'grey',
                 weight: 2,
                 opacity: .55,
