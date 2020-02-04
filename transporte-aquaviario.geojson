@@ -4,7 +4,9 @@
     {
       "type": "Feature",
       "properties": {
-        "id": 1
+        "id": 1,
+        "nome": "Balsa Vila da Glória Joinville",
+        "Operador": ""
       },
       "geometry": {
         "type": "LineString",
@@ -16,6 +18,72 @@
           [
             -48.75504970550537,
             -26.222560525209502
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "nome": "Ferry Boat Itajaí-Navegantes",
+        "Operador": "Empresa de Navegação de Santa Catarina Ltda.",
+        "cnpj": "84.296.060/0001-93"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -48.656355142593384,
+            -26.903452791506343
+          ],
+          [
+            -48.655164241790764,
+            -26.90082165519085
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "nome": "Balsa Itajaí-Navegantes",
+        "cnpj": "84.296.060/0001-93",
+        "Operador": "Empresa de Navegação de Santa Catarina Ltda."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -48.68047893047333,
+            -26.88684690218247
+          ],
+          [
+            -48.68146598339081,
+            -26.88466991925064
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "nome": "Balsa de Laguna",
+        "Operador": "Laguna Navegação Ltda.",
+        "cnpj": "83.711.671/0001-98"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -48.77049922943115,
+            -28.500923179766037
+          ],
+          [
+            -48.774940967559814,
+            -28.497029095193177
           ]
         ]
       }
