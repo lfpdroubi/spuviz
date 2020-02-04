@@ -238,10 +238,24 @@
                 fillOpacity: 0.5
               }
             };
+            
+            var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
+              style: areaStyle,
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Município: </b>" + feature.properties.nome + "<br>" +
+                               "<b>Geocodigo: </b>" + feature.properties.geocodigo + "<br>" +
+                               "<b>Gestão de Praias: </b>" + gestaoPraiaStatus(feature)  + "<br>" +
+                               "<b>NUP: </b>" + "<a href=" + feature.properties.nup_gpraia + ">Link para portaria.</a>"
+                               );
+
+                }
+              }
+              ).addTo(map);
 
             var EEZ = L.geoJSON(eez.responseJSON, {
               style: {
-                color: 'Aquamarine',
+                color: '#133863',
                 weight: 2,
                 fillOpacity: .25
               },
@@ -257,7 +271,7 @@
 
             var CZ = L.geoJSON(cz.responseJSON, {
               style:{
-                color: 'Aqua',
+                color: '#236AB9',
                 weight: 2,
                 fillOpacity: .25
               },
@@ -273,8 +287,7 @@
 
             var TS = L.geoJSON(ts.responseJSON, {
               style:{
-                color: 'navy',
-                weight: 2,
+                color: '#609CE1',
                 fillOpacity: .25
               },
               onEachFeature: function( feature, layer ){
@@ -290,7 +303,7 @@
 
             var IW = L.geoJSON(iw.responseJSON, {
               style:{
-                color: 'royalblue',
+                color: '#E1ECF9',
                 weight: 2,
                 fillOpacity: .25
               },
@@ -304,37 +317,23 @@
                 }
                 ).addTo(map);
 
-            var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
-              style: areaStyle,
+            var UC = L.geoJSON(uc.responseJSON, {
+              style:{
+                color: 'DarkOliveGreen',
+                weight: 2,
+                fillOpacity: .25
+              },
               onEachFeature: function( feature, layer ){
                              layer.bindPopup(
-                               "<b>Município: </b>" + feature.properties.nome + "<br>" +
-                               "<b>Geocodigo: </b>" + feature.properties.geocodigo + "<br>" +
-                               "<b>Gestão de Praias: </b>" + gestaoPraiaStatus(feature)  + "<br>" +
-                               "<b>NUP: </b>" + "<a href=" + feature.properties.nup_gpraia + ">Link para portaria.</a>"
+                               "<b>Nome: </b>" + feature.properties.NOME_UC1 + "<br>" +
+                               "<b>Categoria: </b>" + feature.properties.CATEGORI3 + "<br>" +
+                               "<b>Esfera: </b>" + feature.properties.ESFERA5  + "<br>" +
+                               "<b>Organização: </b>" + feature.properties.NOME_ORG12
                                );
 
-                }
               }
-              ).addTo(map);
-
-              var UC = L.geoJSON(uc.responseJSON, {
-                style:{
-                  color: 'DarkOliveGreen',
-                  weight: 2,
-                  fillOpacity: .25
-                },
-                onEachFeature: function( feature, layer ){
-                               layer.bindPopup(
-                                 "<b>Nome: </b>" + feature.properties.NOME_UC1 + "<br>" +
-                                 "<b>Categoria: </b>" + feature.properties.CATEGORI3 + "<br>" +
-                                 "<b>Esfera: </b>" + feature.properties.ESFERA5  + "<br>" +
-                                 "<b>Organização: </b>" + feature.properties.NOME_ORG12
-                                 );
-
-                  }
-                }
-                ).addTo(map);
+            }
+            ).addTo(map);
 
             var Portos = L.geoJSON(portos.responseJSON, {
               style: function(feature) {
@@ -427,17 +426,9 @@
 
             var groupedOverlays = {
               "Destinação": {
-                "Ocupações": Ocupacoes,
+                "Portos": Portos,
                 "Cessões": Cessoes,
-                "Portos": Portos
-              },
-              "Linhas": {
-                "LPM Homologada": LPM_HOM,
-                "LPM Demarcada": LPM_DEM,
-                "LPM Presumida": LPM_PRE,
-                "LLTM Homologada": LLTM_HOM,
-                "LLTM Demarcada": LLTM_DEM,
-                "LLTM Presumida": LLTM_PRE
+                "Ocupações": Ocupacoes
               },
               "Limites territoriais":{
                 "Municípios": MUNICIPIOS,
@@ -448,6 +439,14 @@
               },
               "Ambiental": {
                 "Unidades de Conservação": UC
+              },
+              "Linhas": {
+                "LPM Homologada": LPM_HOM,
+                "LPM Demarcada": LPM_DEM,
+                "LPM Presumida": LPM_PRE,
+                "LLTM Homologada": LLTM_HOM,
+                "LLTM Demarcada": LLTM_DEM,
+                "LLTM Presumida": LLTM_PRE
               }
             };
 
