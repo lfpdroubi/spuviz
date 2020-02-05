@@ -565,7 +565,9 @@
               tileZ: 1   // tile zoom level
             }));
 
-            L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
+            L.control.groupedLayers(baseLayers, groupedOverlays, {
+              position: 'topleft'
+            }).addTo(map);
 
             var searchControl = new L.Control.Search({
 		          layer: Cessoes,
@@ -579,7 +581,11 @@
             }).
             addTo(map);
 
-		        L.control.mouseCoordinate({gps: true, gpsLong: false, position: 'bottomleft'}).addTo(map);
+		        L.control.mouseCoordinate({
+		          gps: true, 
+		          gpsLong: false, 
+		          position: 'bottomleft'
+		        }).addTo(map);
 		        
             leafletImage(map, function(err, canvas) {
               // now you have canvas
