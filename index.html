@@ -195,6 +195,15 @@
             alert(xhr.statusText)
           }
         })
+        
+        var ranchos_pesca = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/ranchos_de_pesca.geojson",
+          dataType: "json",
+          success: console.log("ranchos_de_pesca data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })        
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
         $.when(municipios, uc, eez, cz, ts, iw, portos, cessoes, ocupacoes, 
@@ -455,14 +464,26 @@
             addTo(map);
             
             // Creating MapkeyIcon object
-            var balsa = L.icon.mapkey({icon:"sailboat"})
+            var balsa = L.icon.mapkey({icon: 'sailboat',color:'#725139',background:'#f2c357',size:30})
+            var aeroporto = L.icon.mapkey({icon: 'airport',color:'#725139',background:'#f2c357',size:30})
+            var marina = L.icon.mapkey({icon: 'marina',color:'#725139',background:'#f2c357',size:30})
+            var heliponto = L.icon.mapkey({icon: 'helicopter',color:'#725139',background:'#f2c357',size:30})
+            var pesca = L.icon.mapkey({icon:"fishing",color:'#725139',background:'#f2c357',size:30})
             
+            // Append to marker:
             var Balsas = L.geoJSON(transporte_aquaviario.responseJSON, {
-                icon: balsa,
-                color: 'grey',
-                weight: 2,
-                opacity: .55,
-                dashArray: "20 20"}).
+              pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {icon:marina});
+              }
+            }).
+            addTo(map);
+            
+            // Append to marker:
+            var Pesca = L.geoJSON(ranchos_pesca.responseJSON, {
+              pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {icon:pesca});
+              }
+            }).
             addTo(map);
               
             var baseLayers = {
