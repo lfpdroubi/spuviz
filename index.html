@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./node_modules/leaflet.mousecoordinate/dist/leaflet.mousecoordinate.css" />
     <link rel="stylesheet" href="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css" />
     <link rel="stylesheet" href="./leaflet-mapkey-icon/dist/MapkeyIcons.css" />
+    <link rel="stylesheet" href="./leaflet.fullscreen/Control.FullScreen.css" />
 
     <!-- Add jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -26,6 +27,7 @@
     <script src="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script>
     <script src="./leaflet-mapkey-icon/dist/L.Icon.Mapkey.js"></script>
     <script src='./node-modules/leaflet-image/leaflet-image.js'></script>
+    <script src="./leaflet.fullscreen/Control.FullScreen.js"></script>
 
     <style type="text/css">
      #map {
@@ -237,6 +239,10 @@
                 center: [-27.675, -51.15],
                 zoom: 8,
                 preferCanvas: true,
+                fullscreenControl: true,
+                fullscreenControlOptions: {
+                  position: 'topleft'
+                },
                 layers: [OpenTopoMap, wmsLayer, OpenStreetMap_DE, Esri_WorldImagery]
             });
 
