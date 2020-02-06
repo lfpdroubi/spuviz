@@ -222,11 +222,10 @@
         certdisp, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
         LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
-            var OpenStreetMap_DE = L.tileLayer(
-              'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                label: "OpenStreetMap",
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            var WSM = L.tileLayer(
+              'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
+			          maxZoom: 18,
+			          attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
               });
 
             var OpenTopoMap = L.tileLayer(
@@ -253,17 +252,10 @@
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             });
             
-            var osm2 = new L.TileLayer(
-              'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',{
-                minZoom: 0, 
-                maxZoom: 13, 
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              });
-
             var map = L.map('map', {
                 center: [-27.675, -51.15],
                 zoom: 8,
-                preferCanvas: true,
+                preferCanvas: false,
                 fullscreenControl: true,
                 fullscreenControlOptions: {
                   position: 'topleft'
@@ -272,7 +264,7 @@
             
             // Add Minimap
             var miniMap = new L.Control.MiniMap(
-              osm2, {
+              WSM, {
                 position: 'topright'
               }
             ).addTo(map);
@@ -528,7 +520,7 @@
                 "SIG-SC": wmsLayer,
                 "OpenTopo": OpenTopoMap,
                 "Esri World Imagery": Esri_WorldImagery,
-                "OpenStreet": OpenStreetMap_DE,
+                "World Street Map": WSM,
                 };
 
             var groupedOverlays = {
@@ -559,7 +551,7 @@
             };
             
             var basemaps = [
-              wmsLayer, OpenTopoMap, Esri_WorldImagery, OpenStreetMap_DE
+              wmsLayer, OpenTopoMap, Esri_WorldImagery, WSM
               ]
             
             map.addControl(L.control.basemaps({
