@@ -10,12 +10,15 @@
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""/>
     <link rel="stylesheet" href="./node_modules/leaflet-search/dist/leaflet-search.src.css" />
-    <link rel="stylesheet" href="./node_modules/leaflet.mousecoordinate/dist/leaflet.mousecoordinate.css" />
+    <link rel="stylesheet" href="./Leaflet.MousePosition/src/L.Control.MousePosition.css" />
     <link rel="stylesheet" href="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.css" />
     <link rel="stylesheet" href="./leaflet-mapkey-icon/dist/MapkeyIcons.css" />
     <link rel="stylesheet" href="./leaflet.fullscreen/Control.FullScreen.css" />
     <link rel="stylesheet" href="./node_modules/leaflet-minimap/dist/Control.MiniMap.min.css" />
     <link rel="stylesheet" href="./node_modules/leaflet-basemaps/L.Control.Basemaps.css" />
+    <link rel="stylesheet" href="./leaflet-betterscale/L.Control.BetterScale.css" />
+    <link href='http://fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+	  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Add jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -25,13 +28,15 @@
       crossorigin=""></script>
     <!-- Add Leaflet Plugins -->
     <script src="./node_modules/leaflet-search/dist/leaflet-search.src.js"></script>
-    <script src="./node_modules/leaflet.mousecoordinate/dist/leaflet.mousecoordinate.js"></script>
+    <script src="./Leaflet.MousePosition/src/L.Control.MousePosition.js"></script>
     <script src="bower_components/leaflet-groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script>
     <script src="./leaflet-mapkey-icon/dist/L.Icon.Mapkey.js"></script>
-    <script src='./node-modules/leaflet-image/leaflet-image.js'></script>
+    <script src='./node_modules/leaflet-easyprint/dist/bundle.js'></script>
     <script src="./leaflet.fullscreen/Control.FullScreen.js"></script>
     <script src="./node_modules/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
     <script src="./node_modules/leaflet-basemaps/L.Control.Basemaps.js"></script>
+    <script src="./leaflet-betterscale/L.Control.BetterScale.js"></script>
+    
     
     <style type="text/css">
      #map {
@@ -314,7 +319,7 @@
 
                 }
               }
-              ).addTo(map);
+            ).addTo(map);
 
             var EEZ = L.geoJSON(eez.responseJSON, {
               style: {
@@ -330,7 +335,7 @@
                                );
                 }
               }
-              ).addTo(map);
+            ).addTo(map);
 
             var CZ = L.geoJSON(cz.responseJSON, {
               style:{
@@ -361,8 +366,7 @@
                                );
                 }
               }
-              ).addTo(map);
-
+            ).addTo(map);
 
             var IW = L.geoJSON(iw.responseJSON, {
               style:{
@@ -378,7 +382,7 @@
                                  );
                   }
                 }
-                ).addTo(map);
+            ).addTo(map);
                 
             var CertDisp = L.geoJSON(certdisp.responseJSON, {
               style:{
@@ -433,7 +437,7 @@
 
                 }
               }
-              ).addTo(map);
+            ).addTo(map);
 
             var Cessoes = L.geoJSON(cessoes.responseJSON, {
                 style: function(feature) {
@@ -454,48 +458,48 @@
 
                 }
               }
-              ).addTo(map);
+            ).addTo(map);
 
             var Ocupacoes = L.geoJSON(ocupacoes.responseJSON, {
                 color: 'royalblue',
-                weight: 1 }).
-            addTo(map);
+                weight: 1 }
+            ).addTo(map);
 
             var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
                 color: 'red',
                 weight: 2,
-                dashArray: "20 20"}).
-            addTo(map);
+                dashArray: "20 20"}
+            ).addTo(map);
 
             var LLTM_HOM = L.geoJSON(LLTM_HOMOLOGADA.responseJSON, {
                 color: 'red',
-                weight: 2}).
-            addTo(map);
+                weight: 2}
+            ).addTo(map);
 
             var LLTM_PRE = L.geoJSON(LLTM_PRESUMIDA.responseJSON, {
                 color: 'red',
                 weight: 2,
                 opacity: .25,
-                dashArray: "20 20"}).
-            addTo(map);
+                dashArray: "20 20"}
+            ).addTo(map);
 
             var LPM_DEM = L.geoJSON(LPM_DEMARCADA.responseJSON, {
                 color: 'blue',
                 weight: 2,
-                dashArray: "20 20"}).
-            addTo(map);
+                dashArray: "20 20"}
+            ).addTo(map);
 
             var LPM_HOM = L.geoJSON(LPM_HOMOLOGADA.responseJSON, {
                 color: 'blue',
-                weight: 2}).
-            addTo(map);
+                weight: 2}
+            ).addTo(map);
 
             var LPM_PRE = L.geoJSON(LPM_PRESUMIDA.responseJSON, {
                 color: 'blue',
                 weight: 2,
                 opacity: .25,
-                dashArray: "20 20"}).
-            addTo(map);
+                dashArray: "20 20"}
+            ).addTo(map);
             
             // Creating MapkeyIcon object
             var balsa = L.icon.mapkey({icon: 'sailboat',color:'#725139',background:'#f2c357',size:30})
@@ -509,16 +513,16 @@
               pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {icon:marina});
               }
-            }).
-            addTo(map);
+            }
+            ).addTo(map);
             
             // Append to marker:
             var Pesca = L.geoJSON(ranchos_pesca.responseJSON, {
               pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {icon:pesca});
               }
-            }).
-            addTo(map);
+            }
+            ).addTo(map);
               
             var baseLayers = {
                 "SIG-SC": wmsLayer,
@@ -578,26 +582,24 @@
 			            var zoom = map.getBoundsZoom(latlng.layer.getBounds());
   			          map.setView(latlng, zoom); // access the zoom
   			          }
-            }).
-            addTo(map);
+            }
+            ).addTo(map);
 
-		        L.control.mouseCoordinate({
-		          gps: true, 
-		          gpsLong: false, 
-		          position: 'bottomleft'
-		        }).addTo(map);
-		        
-            leafletImage(map, function(err, canvas) {
-              // now you have canvas
-              // example thing to do with that canvas:
-              var img = document.createElement('img');
-              var dimensions = map.getSize();
-              img.width = dimensions.x;
-              img.height = dimensions.y;
-              img.src = canvas.toDataURL();
-              document.getElementById('images').innerHTML = '';
-              document.getElementById('images').appendChild(img);
-});
+            L.control.mousePosition({
+              position: 'bottomleft'
+            }).addTo(map);
+
+            L.control.betterscale({
+              metric:  true,
+              imperial: false,
+              position: 'bottomleft'
+            }).addTo(map);
+            
+            L.easyPrint({
+      		    title: 'My awesome print button',
+      		    position: 'topleft',
+      		    sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
+      		  }).addTo(map);
 
         });
     </script>
