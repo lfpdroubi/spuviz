@@ -223,9 +223,16 @@
             var WSM = L.tileLayer(
               'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
 			          maxZoom: 18,
-			          label: 'WorldStreetMap',
+			          label: "World Street Map",
 			          attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
               });
+              
+            var OpenStreetMap_Mapnik = L.tileLayer(
+              'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                label: "OpenStreetMap",
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
 
             var OpenTopoMap = L.tileLayer(
               'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
@@ -251,13 +258,6 @@
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             });
             
-            var OpenStreetMap_Mapnik = L.tileLayer(
-              'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	              maxZoom: 19,
-	              label: 'OpenStreetMap',
-	              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-            
             var map = L.map('map', {
                 center: [-27.675, -51.15],
                 zoom: 8,
@@ -269,8 +269,7 @@
             });
             
             // Add Minimap
-            var miniMap = new L.Control.MiniMap(
-              WSM, {
+            var miniMap = new L.Control.MiniMap(OpenStreetMap_Mapnik, {
                 position: 'topright'
               }
             ).addTo(map);
@@ -526,7 +525,7 @@
                 "SIG-SC": wmsLayer,
                 "OpenTopo": OpenTopoMap,
                 "Esri World Imagery": Esri_WorldImagery,
-                "OpenStreetMap": OpenStreetMap_Mapnik,
+                "World Street Map": WSM,
                 };
 
             var groupedOverlays = {
@@ -557,7 +556,7 @@
             };
             
             var basemaps = [
-              wmsLayer, OpenTopoMap, Esri_WorldImagery, OpenStreetMap_Mapnik
+              wmsLayer, OpenStreetMap_Mapnik, OpenTopoMap, Esri_WorldImagery
               ]
             
             map.addControl(L.control.basemaps({
@@ -594,13 +593,10 @@
             }).addTo(map);
             
             L.easyPrint({
-      		    title: 'Print',
-      		    tileLayer: OpenStreetMap_Mapnik,
+      		    title: 'My awesome print button',
       		    position: 'topleft',
       		    sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
-      		    filename: 'myMap',
       		    exportOnly: true,
-      		    hideControlContainer: true
       		  }).addTo(map);
 
         });
