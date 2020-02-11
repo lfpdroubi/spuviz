@@ -21,8 +21,14 @@
   "homepage": "https://github.com/lfpdroubi/spuviz#readme",
   "dependencies": {
     "@mapbox/geojson-merge": "^1.1.1",
+    "leaflet-basemaps": "^0.3.4",
     "leaflet-copy-coordinates-control": "github:tinjaw/Leaflet-Copy-Coordinates-Control",
+    "leaflet-easyprint": "^2.1.9",
+    "leaflet-image": "^0.4.0",
+    "leaflet-minimap": "^3.6.1",
     "leaflet-search": "^2.9.8",
-    "leaflet.mousecoordinate": "github:PowerPan/leaflet.mouseCoordinate"
+    "leaflet.browser.print": "^1.0.2",
+    "leaflet.mousecoordinate": "github:PowerPan/leaflet.mouseCoordinate",
+    "proj4leaflet": "^1.0.2"
   }
 }
