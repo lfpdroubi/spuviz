@@ -37,7 +37,7 @@
     <script src="https://leaflet.github.io/Leaflet.Graticule/Leaflet.Graticule.js"></script>
     <script src="./node_modules/proj4/dist/proj4.js"></script>
     <script src="./node_modules/proj4leaflet/src/proj4leaflet.js"></script>
-    
+    <script src="./node_modules/leaflet-textpath/leaflet.textpath.js"></script>
     
     <style type="text/css">
      #map {
@@ -56,10 +56,19 @@
     <!-- MAP SCRIPT -->
     <script>
         // Add AJAX request for data
+        var latinamerica = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/LatinAmerica.geojson",
+          dataType: "json",
+          success: console.log("Latin America boundaries data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
+        
         var ufs = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/unidades_federacao.geojson",
           dataType: "json",
-          success: console.log("unidades_federacao data successfully loaded."),
+          success: console.log("Brazilian boundaries data successfully loaded."),
           error: function (xhr) {
             alert(xhr.statusText)
           }
@@ -87,6 +96,15 @@
           url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/EEZ.geojson",
           dataType: "json",
           success: console.log("EEZ data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
+        
+        var trindade = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/Trindade.geojson",
+          dataType: "json",
+          success: console.log("Trindade data successfully loaded."),
           error: function (xhr) {
             alert(xhr.statusText)
           }
@@ -228,9 +246,10 @@
         })        
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
-        $.when(ufs, municipios, uc, eez, cz, ts, iw, portos, cessoes, ocupacoes, 
-        certdisp, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
-        LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
+        $.when(latinamerica, ufs, municipios, uc, eez, trindade, cz, ts, iw, 
+        portos, cessoes, ocupacoes, certdisp, LLTM_DEMARCADA, LLTM_HOMOLOGADA, 
+        LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, 
+        transporte_aquaviario).done(function() {
 
             var WSM = L.tileLayer(
               'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -278,18 +297,19 @@
 	             });
             
             var map = L.map('map', {
-                center: [-27.675, -51.15],
-                zoom: 8,
+                center: [-15.77972, -47.92972],
+                zoomControl: false,
+                zoom: 4,
                 preferCanvas: false,
                 fullscreenControl: true,
                 fullscreenControlOptions: {
-                  position: 'topleft'
+                  position: 'topright'
                 }
             });
             
             // Add Minimap
-            var miniMap = new L.Control.MiniMap(OpenStreetMap_Mapnik, {
-                position: 'topright'
+            var miniMap = new L.Control.MiniMap(Esri_OceanBasemap, {
+                position: 'topleft'
               }
             ).addTo(map);
             
@@ -326,6 +346,27 @@
             proj4.defs('EPSG:31982', '+proj=utm +zone=22 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ');
 
             // Adds SIRGAS2000 GeoJSON
+            var LatinAmerica = L.geoJSON(latinamerica.responseJSON, {
+              style: function(feature) {
+                return{
+                  fillOpacity: .25,
+                  color: feature.COLORMAP,
+                  weight: 0.75
+                }
+              },
+              onEachFeature: function( feature, layer ){
+                layer.bindPopup(
+                  "<b>Nome: </b>" + feature.properties.LONG_NAME + "<br>" +
+                  "<b>Status: </b>" + feature.properties.STATUS + "<br>" +
+                  "<b>Area: </b>" + feature.properties.SQKM.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " km &#178; <br>" +
+                  "<b>População: </b>" + feature.properties.POP_CNTRY + "<br>"
+                  );
+                layer.bindTooltip(feature.properties.ISOSHRTNAM,{
+                  permanent: false
+                });
+              }
+            }).addTo(map);
+            
             var UF = L.Proj.geoJson(ufs.responseJSON, {
               style: {
                 color: '#f1f4c7',
@@ -338,22 +379,26 @@
                     "<b>Região: </b>" + feature.properties.NM_REGIAO + "<br>" +
                     "<b>Código: </b>" + feature.properties.CD_GEOCUF
                   );
+                  layer.bindTooltip(feature.properties.NM_ESTADO,{
+                    permanent: false
+                  });
                 }
-              }
-            ).addTo(map);
+            }).addTo(map);
             
             var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
               style: areaStyle,
               onEachFeature: function( feature, layer ){
-                             layer.bindPopup(
-                               "<b>Município: </b>" + feature.properties.nome + "<br>" +
-                               "<b>Geocodigo: </b>" + feature.properties.geocodigo + "<br>" +
-                               "<b>Gestão de Praias: </b>" + gestaoPraiaStatus(feature)  + "<br>" +
-                               "<b>NUP: </b>" + "<a href=" + feature.properties.nup_gpraia + ">Link para portaria.</a>"
-                               );
-
-                }
+                layer.bindPopup(
+                  "<b>Município: </b>" + feature.properties.nome + "<br>" +
+                  "<b>Geocodigo: </b>" + feature.properties.geocodigo + "<br>" +
+                  "<b>Gestão de Praias: </b>" + gestaoPraiaStatus(feature)  + "<br>" +
+                  "<b>NUP: </b>" + "<a href=" + feature.properties.nup_gpraia + ">Link para portaria.</a>"
+                  );
+                layer.bindTooltip(feature.properties.nome,{
+                  permanent: false
+                });
               }
+            }
             ).addTo(map);
 
             var EEZ = L.geoJSON(eez.responseJSON, {
@@ -366,6 +411,24 @@
                              layer.bindPopup(
                                "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN)" + "<br>" +
                                "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez >Link.</a>" + "<br>" +
+                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
+                               "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental de jun/2019."
+                               );
+                }
+              }
+            ).addTo(map);
+            
+            var TRINDADE = L.geoJSON(trindade.responseJSON, {
+              style: {
+                color: '#133863',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN) - Trindade" + "<br>" +
+                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/eezdetails.php?mrgid=8381&all_territories=1&zone=eez >Link.</a>" + "<br>" +
+                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                                "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental de jun/2019."
                                );
                 }
@@ -382,6 +445,7 @@
                              layer.bindPopup(
                                "<b>Descrição: </b>" + "Zona Contígua (24 MN)" + "<br>" +
                                "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez_24nm >Link.</a>" + "<br>" +
+                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                                "<b>Obs.: </b>" + "-."
                                );
                 }
@@ -397,6 +461,7 @@
                              layer.bindPopup(
                                "<b>Descrição: </b>" + "Mar Territorial (12 MN)" + "<br>" +
                                "<b>Fonte: </b>" + "<a href=  http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez_12nm >Link.</a>" + "<br>" +
+                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                                "<b>Obs.: </b>" + "-."
                                );
                 }
@@ -413,6 +478,7 @@
                                layer.bindPopup(
                                  "<b>Descrição: </b>" + "Águas Internas (12 MN)" + "<br>" +
                                  "<b>Fonte: </b>" + "<a href=  http://www.marineregions.org/eezdetails.php?mrgid=8464&zone=eez_internal_waters >Link.</a>" + "<br>" +
+                                 "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                                  "<b>Obs.: </b>" + "-."
                                  );
                   }
@@ -501,39 +567,149 @@
             ).addTo(map);
 
             var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
+              style: {
                 color: 'red',
                 weight: 2,
-                dashArray: "20 20"}
+                dashArray: "20 20" 
+              },
+              onEachFeature: function( feature, layer ){
+                layer.bindPopup(
+                  "<b>Linha: </b>" + feature.properties.Linha + "<br>" +
+                  "<b>Status: </b>" + feature.properties.Status + "<br>" +
+                  "<b>SRID Origem: </b>" + feature.properties.SRID  
+                );
+                layer.setText(feature.properties.Linha + " " +
+                              feature.properties.Status, {
+                                repeat: false,
+                                offset: 12,
+                                attributes: {
+                                  'font-weight': 'bold',
+                                  'font-size': '12'}
+                              });
+              }
+            }
             ).addTo(map);
+            
 
             var LLTM_HOM = L.geoJSON(LLTM_HOMOLOGADA.responseJSON, {
+              style: {
                 color: 'red',
-                weight: 2}
-            ).addTo(map);
+                weight: 2
+              },
+              onEachFeature: function( feature, layer ){
+                layer.bindPopup(
+                  "<b>Linha: </b>" + feature.properties.Linha + "<br>" +
+                  "<b>Status: </b>" + feature.properties.Status + "<br>" +
+                  "<b>SRID Origem: </b>" + feature.properties.SRID  
+                );
+                layer.setText(feature.properties.Linha + " " +
+                              feature.properties.Status, {
+                                repeat: false,
+                                offset: 12,
+                                attributes: {
+                                  'font-weight': 'bold',
+                                  'font-size': '12'}
+                              });
+              }
+            }
+            ).addTo(map);              
 
             var LLTM_PRE = L.geoJSON(LLTM_PRESUMIDA.responseJSON, {
+              style: {
                 color: 'red',
                 weight: 2,
                 opacity: .25,
-                dashArray: "20 20"}
-            ).addTo(map);
-
+                dashArray: "20 20"                
+              },
+              onEachFeature: function( feature, layer ){
+                layer.bindPopup(
+                  "<b>Linha: </b>" + feature.properties.Linha + "<br>" +
+                  "<b>Status: </b>" + feature.properties.Status + "<br>" +
+                  "<b>SRID Origem: </b>" + feature.properties.SRID  
+                );
+                layer.setText(feature.properties.Linha + " " +
+                              feature.properties.Status, {
+                                repeat: false,
+                                offset: 12,
+                                attributes: {
+                                  'font-weight': 'bold',
+                                  'font-size': '12'}
+                              });
+              }
+            }
+            ).addTo(map);   
+            
             var LPM_DEM = L.geoJSON(LPM_DEMARCADA.responseJSON, {
+              style: {
                 color: 'blue',
                 weight: 2,
-                dashArray: "20 20"}
-            ).addTo(map);
-
+                dashArray: "20 20"  
+              },
+              onEachFeature: function( feature, layer ){
+                layer.bindPopup(
+                  "<b>Linha: </b>" + feature.properties.Linha + "<br>" +
+                  "<b>Status: </b>" + feature.properties.Status + "<br>" +
+                  "<b>SRID Origem: </b>" + feature.properties.SRID  
+                );
+                layer.setText(feature.properties.Linha + " " +
+                              feature.properties.Status, {
+                                repeat: false,
+                                offset: 12,
+                                attributes: {
+                                  'font-weight': 'bold',
+                                  'font-size': '12'}
+                              });
+              }
+            }
+            ).addTo(map); 
+                
             var LPM_HOM = L.geoJSON(LPM_HOMOLOGADA.responseJSON, {
+              style: {
                 color: 'blue',
-                weight: 2}
+                weight: 2
+              },
+              onEachFeature: function( feature, layer ){
+                layer.bindPopup(
+                  "<b>Linha: </b>" + feature.properties.Linha + "<br>" +
+                  "<b>Status: </b>" + feature.properties.Status + "<br>" +
+                  "<b>SRID Origem: </b>" + feature.properties.SRID  
+                );
+                ;
+                layer.setText(feature.properties.Linha + " " +
+                              feature.properties.Status, {
+                                repeat: false,
+                                offset: 12,
+                                attributes: {
+                                  'font-weight': 'bold',
+                                  'font-size': '12'}
+                              });
+              }
+            }
             ).addTo(map);
 
             var LPM_PRE = L.geoJSON(LPM_PRESUMIDA.responseJSON, {
+              style: {
                 color: 'blue',
                 weight: 2,
                 opacity: .25,
-                dashArray: "20 20"}
+                dashArray: "20 20"  
+              },
+              onEachFeature: function( feature, layer ){
+                layer.bindPopup(
+                  "<b>Linha: </b>" + feature.properties.Linha + "<br>" +
+                  "<b>Status: </b>" + feature.properties.Status + "<br>" +
+                  "<b>SRID Origem: </b>" + feature.properties.SRID  
+                );
+                layer.setText(feature.properties.Linha + " " +
+                              feature.properties.Status, {
+                                repeat: false,
+                                offset: 12,
+                                attributes: {
+                                  'font-weight': 'bold',
+                                  'font-size': '12'}
+                              });
+              }
+            }
             ).addTo(map);
             
             // Creating MapkeyIcon object
@@ -606,7 +782,7 @@
             }));
 
             L.control.groupedLayers(null, groupedOverlays, {
-              position: 'topleft'
+              position: 'topright'
             }).addTo(map);
 
             var searchControl = new L.Control.Search({
@@ -633,10 +809,14 @@
             
             L.easyPrint({
               tileLayer: OpenStreetMap_Mapnik,
-      		    title: 'My awesome print button',
+      		    title: 'Screenshot',
       		    position: 'topleft',
       		    sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
       		    exportOnly: true,
+      		    hideControlContainer: false,
+      		    hideClasses: ['leaflet-control-zoom', 'leaflet-control-search',
+      		    'leaflet-control-mouseposition', 'leaflet-control-layers',
+      		    'leaflet-control-easyPrint', 'basemaps']
       		  }).addTo(map);
       		  
       		  L.latlngGraticule({
