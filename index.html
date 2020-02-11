@@ -34,6 +34,9 @@
     <script src="./node_modules/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
     <script src="./node_modules/leaflet-basemaps/L.Control.Basemaps.js"></script>
     <script src="./leaflet-betterscale/L.Control.BetterScale.js"></script>
+    <script src="https://leaflet.github.io/Leaflet.Graticule/Leaflet.Graticule.js"></script>
+    <script src="./node_modules/proj4/dist/proj4.js"></script>
+    <script src="./node_modules/proj4leaflet/src/proj4leaflet.js"></script>
     
     
     <style type="text/css">
@@ -53,8 +56,17 @@
     <!-- MAP SCRIPT -->
     <script>
         // Add AJAX request for data
+        var unidades_federacao = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/unidades_federacao.geojson",
+          dataType: "json",
+          success: console.log("unidades_federacao data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
+        
         var municipios = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/municipios.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/municipios.geojson",
           dataType: "json",
           success: console.log("municipios data successfully loaded."),
           error: function (xhr) {
@@ -63,7 +75,7 @@
         })
 
         var uc = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/ambiental/UC.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/ambiental/UC.geojson",
           dataType: "json",
           success: console.log("UC data successfully loaded."),
           error: function (xhr) {
@@ -72,7 +84,7 @@
         })
 
         var eez = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/EEZ.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/EEZ.geojson",
           dataType: "json",
           success: console.log("EEZ data successfully loaded."),
           error: function (xhr) {
@@ -81,7 +93,7 @@
         })
 
         var cz = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/CZ.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/CZ.geojson",
           dataType: "json",
           success: console.log("CZ data successfully loaded."),
           error: function (xhr) {
@@ -90,7 +102,7 @@
         })
 
         var ts = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/TS.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/TS.geojson",
           dataType: "json",
           success: console.log("TS data successfully loaded."),
           error: function (xhr) {
@@ -99,7 +111,7 @@
         })
 
         var iw = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/IW.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/IW.geojson",
           dataType: "json",
           success: console.log("IW data successfully loaded."),
           error: function (xhr) {
@@ -108,7 +120,7 @@
         })
 
         var portos = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/portos.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/portos.geojson",
           dataType: "json",
           success: console.log("Ports data successfully loaded."),
           error: function (xhr) {
@@ -117,7 +129,7 @@
         })
 
         var cessoes = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/cessoes.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/cessoes.geojson",
           dataType: "json",
           success: console.log("Cessions data successfully loaded."),
           error: function (xhr) {
@@ -126,7 +138,7 @@
         })
 
         var ocupacoes = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/ocupacoes.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/ocupacoes.geojson",
           dataType: "json",
           success: console.log("Ocupations data successfully loaded."),
           error: function (xhr) {
@@ -135,7 +147,7 @@
         })
         
         var certdisp = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/certdisp.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/certdisp.geojson",
           dataType: "json",
           success: console.log("CertDisp data successfully loaded."),
           error: function (xhr) {
@@ -144,7 +156,7 @@
         })
 
         var LLTM_DEMARCADA = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/linhas/LLTM_DEMARCADA.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LLTM_DEMARCADA.geojson",
           dataType: "json",
           success: console.log("LLTM Demarcada data successfully loaded."),
           error: function (xhr) {
@@ -153,7 +165,7 @@
         })
 
         var LLTM_HOMOLOGADA = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/linhas/LLTM_HOMOLOGADA.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LLTM_HOMOLOGADA.geojson",
           dataType: "json",
           success: console.log("LLTM Homologada data successfully loaded."),
           error: function (xhr) {
@@ -162,7 +174,7 @@
         })
 
         var LLTM_PRESUMIDA = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/linhas/LLTM_PRESUMIDA.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LLTM_PRESUMIDA.geojson",
           dataType: "json",
           success: console.log("LLTM Presumida data successfully loaded."),
           error: function (xhr) {
@@ -171,7 +183,7 @@
         })
 
         var LPM_DEMARCADA = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/linhas/LPM_DEMARCADA.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LPM_DEMARCADA.geojson",
           dataType: "json",
           success: console.log("LPM Demarcada data successfully loaded."),
           error: function (xhr) {
@@ -180,7 +192,7 @@
         })
 
         var LPM_HOMOLOGADA = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/linhas/LPM_HOMOLOGADA.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LPM_HOMOLOGADA.geojson",
           dataType: "json",
           success: console.log("LPM Homologada data successfully loaded."),
           error: function (xhr) {
@@ -189,7 +201,7 @@
         })
 
         var LPM_PRESUMIDA = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/linhas/LPM_PRESUMIDA.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LPM_PRESUMIDA.geojson",
           dataType: "json",
           success: console.log("LPM Presumida data successfully loaded."),
           error: function (xhr) {
@@ -198,7 +210,7 @@
         })
         
         var transporte_aquaviario = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/transporte-aquaviario.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/transporte-aquaviario.geojson",
           dataType: "json",
           success: console.log("transporte_aquaviario data successfully loaded."),
           error: function (xhr) {
@@ -207,7 +219,7 @@
         })
         
         var ranchos_pesca = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/spuviz/master/ranchos_de_pesca.geojson",
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/ranchos_de_pesca.geojson",
           dataType: "json",
           success: console.log("ranchos_de_pesca data successfully loaded."),
           error: function (xhr) {
@@ -563,7 +575,8 @@
             };
             
             var basemaps = [
-              wmsLayer, OpenStreetMap_Mapnik, OpenTopoMap, Esri_WorldImagery, Esri_OceanBasemap
+              wmsLayer, OpenStreetMap_Mapnik, OpenTopoMap, Esri_WorldImagery, 
+              Esri_OceanBasemap
               ]
             
             map.addControl(L.control.basemaps({
@@ -606,6 +619,18 @@
       		    sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
       		    exportOnly: true,
       		  }).addTo(map);
+      		  
+      		  L.latlngGraticule({
+			        showLabel: true,
+			        color: '#222',
+			        zoomInterval: [
+				        {start: 2, end: 3, interval: 30},
+				        {start: 4, end: 4, interval: 10},
+				        {start: 5, end: 7, interval: 5},
+				        {start: 8, end: 10, interval: 1},
+				        {start: 11, end:15, interval:.2}
+			        ]
+		        }).addTo(map);
 
         });
     </script>
