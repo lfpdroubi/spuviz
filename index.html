@@ -56,7 +56,7 @@
     <!-- MAP SCRIPT -->
     <script>
         // Add AJAX request for data
-        var unidades_federacao = $.ajax({
+        var ufs = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/unidades_federacao.geojson",
           dataType: "json",
           success: console.log("unidades_federacao data successfully loaded."),
@@ -228,7 +228,7 @@
         })        
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
-        $.when(municipios, uc, eez, cz, ts, iw, portos, cessoes, ocupacoes, 
+        $.when(ufs, municipios, uc, eez, cz, ts, iw, portos, cessoes, ocupacoes, 
         certdisp, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
         LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
@@ -326,7 +326,7 @@
             proj4.defs('EPSG:31982', '+proj=utm +zone=22 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ');
 
             // Adds SIRGAS2000 GeoJSON
-            var UF = L.Proj.geoJson(unidades_federacao.responseJSON, {
+            var UF = L.Proj.geoJson(ufs.responseJSON, {
               style: {
                 color: '#f1f4c7',
                 weight: 2,
