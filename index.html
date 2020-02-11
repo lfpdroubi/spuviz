@@ -292,7 +292,7 @@
                 position: 'topright'
               }
             ).addTo(map);
-
+            
             function gestaoPraiaStatus(feature){
               switch (feature.properties.gest_praia){
               	case 1 : return 'Sim' ;
@@ -322,6 +322,23 @@
             };
             
             // Add requested external GeoJSON to map
+            
+                    // Adds SIRGAS2000 GeoJSON
+            var UF = L.Proj.geoJson(unidades_federacao.responseJSON, {
+              style: {
+                color: '#f1f4c7',
+                weight: 2,
+                fillOpacity: 0.25
+              },
+                onEachFeature: function( feature, layer ){
+                  layer.bindPopup(
+                    "<b>Estado: </b>" + feature.properties.NM_ESTADO + "<br>" +
+                    "<b>Região: </b>" + feature.properties.NM_REGIAO + "<br>" +
+                    "<b>Código: </b>" + feature.properties.CD_GEOCUF
+                  );
+                }
+              }
+            ).addTo(map);
             
             var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
               style: areaStyle,
