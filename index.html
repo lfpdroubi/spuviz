@@ -323,7 +323,9 @@
             
             // Add requested external GeoJSON to map
             
-                    // Adds SIRGAS2000 GeoJSON
+            proj4.defs('EPSG:31982', '+proj=utm +zone=22 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ');
+
+            // Adds SIRGAS2000 GeoJSON
             var UF = L.Proj.geoJson(unidades_federacao.responseJSON, {
               style: {
                 color: '#f1f4c7',
