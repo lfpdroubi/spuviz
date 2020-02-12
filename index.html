@@ -308,7 +308,7 @@
             });
             
             // Add Minimap
-            var miniMap = new L.Control.MiniMap(Esri_OceanBasemap, {
+            var miniMap = new L.Control.MiniMap(OpenStreetMap_Mapnik, {
                 position: 'topleft'
               }
             ).addTo(map);
@@ -770,8 +770,9 @@
             };
             
             var basemaps = [
-              wmsLayer, OpenStreetMap_Mapnik, OpenTopoMap, Esri_WorldImagery, 
-              Esri_OceanBasemap
+              Esri_OceanBasemap, Esri_WorldImagery, OpenStreetMap_Mapnik , 
+              OpenTopoMap, wmsLayer
+              
               ]
             
             map.addControl(L.control.basemaps({
@@ -814,7 +815,7 @@
       		    sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
       		    exportOnly: true,
       		    hideControlContainer: false,
-      		    hideClasses: ['leaflet-control-zoom', 'leaflet-control-search',
+      		    hideClasses: ['leaflet-control-search', 
       		    'leaflet-control-mouseposition', 'leaflet-control-layers',
       		    'leaflet-control-easyPrint', 'basemaps']
       		  }).addTo(map);
