@@ -109,6 +109,15 @@
             alert(xhr.statusText)
           }
         })
+        
+        var extensao = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/br_extensao_pc.geojson",
+          dataType: "json",
+          success: console.log("Trindade data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
 
         var cz = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/CZ.geojson",
@@ -246,10 +255,10 @@
         })        
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
-        $.when(latinamerica, ufs, municipios, uc, eez, trindade, cz, ts, iw, 
-        portos, cessoes, ocupacoes, certdisp, LLTM_DEMARCADA, LLTM_HOMOLOGADA, 
-        LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, 
-        transporte_aquaviario).done(function() {
+        $.when(latinamerica, ufs, municipios, uc, eez, trindade, extensao, cz, 
+        ts, iw, portos, cessoes, ocupacoes, certdisp, LLTM_DEMARCADA, 
+        LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, 
+        LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
             var WSM = L.tileLayer(
               'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -310,7 +319,8 @@
             
             // Add Minimap
             var miniMap = new L.Control.MiniMap(OpenStreetMap_Mapnik, {
-                position: 'topleft'
+                position: 'topright',
+                toggleDisplay: true
               }
             ).addTo(map);
             
@@ -431,6 +441,22 @@
                                "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/eezdetails.php?mrgid=8381&all_territories=1&zone=eez >Link.</a>" + "<br>" +
                                "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                                "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental de jun/2019."
+                               );
+                }
+              }
+            ).addTo(map);
+            
+            var EXTENSAO = L.geoJSON(extensao.responseJSON, {
+              style: {
+                color: 'LightGray',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Nome: </b>" + feature.properties.nome + "<br>" +
+                               "<b>Região: </b>" +  feature.properties.regiao + "<br>" +
+                               "<b>Área (km &#178; ): "
                                );
                 }
               }
@@ -726,7 +752,8 @@
                 return L.marker(latlng, {icon:marina});
               }
             }
-            ).addTo(map);
+            );
+            
             
             // Append to marker:
             var Pesca = L.geoJSON(ranchos_pesca.responseJSON, {
@@ -734,7 +761,7 @@
                 return L.marker(latlng, {icon:pesca});
               }
             }
-            ).addTo(map);
+            );
               
             var baseLayers = {
                 "SIG-SC": wmsLayer,
@@ -748,14 +775,20 @@
                 "Portos": Portos,
                 "Cessões": Cessoes,
                 "Ocupações": Ocupacoes,
-                "Certidões de Disponibilidade": CertDisp
+                "Certidões de Disponibilidade": CertDisp,
+                "TAUS": Pesca,
+                "Transporte Marítimo": Balsas
               },
               "Limites territoriais":{
-                "Municípios": MUNICIPIOS,
+                "América Latina": LatinAmerica,
+                "Estados BR": UF,
+                "Municípios SC": MUNICIPIOS,
                 "Águas Internas": IW,
                 "Mar Territorial (12MN)": TS,
                 "Zona Contígua (24MN)": CZ,
-                "Zona Econômica Exclusiva (200MN)": EEZ
+                "Zona Econômica Exclusiva (200MN)": EEZ,
+                "ZEE Trindade": TRINDADE,
+                "Extensão da PC": EXTENSAO
               },
               "Ambiental": {
                 "Unidades de Conservação": UC
@@ -784,7 +817,7 @@
             }));
 
             L.control.groupedLayers(null, groupedOverlays, {
-              position: 'topright'
+              position: 'topleft'
             }).addTo(map);
 
             var searchControl = new L.Control.Search({
