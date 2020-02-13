@@ -131,6 +131,24 @@
           }
         })        
         
+        var falklands_eez = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/malvinas-falklands.geojson",
+          dataType: "json",
+          success: console.log("Falklands EEZ data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })  
+        
+        var falklands = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/malvinas.geojson",
+          dataType: "json",
+          success: console.log("Falklands data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        }) 
+        
         var ury_eez = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/URY_EEZ.geojson",
           dataType: "json",
@@ -286,7 +304,8 @@
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
         $.when(latinamerica, ufs, municipios, uc, eez, trindade, extensao, cz, 
-        ts, iw, arg_eez, ury_eez, arg_ury, portos, cessoes, ocupacoes, certdisp, 
+        ts, iw, arg_eez, falklands, falklands_eez, ury_eez, arg_ury, 
+        portos, cessoes, ocupacoes, certdisp, 
         LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
         LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
@@ -504,6 +523,40 @@
                                "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=8466 target='_blank'>Link.</a>" + "<br>" +
                                "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                                "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental."
+                               );
+                }
+              }
+            ).addTo(map);
+            
+          var FALKLANDS = L.geoJSON(falklands.responseJSON, {
+              style: {
+                color: '#133863',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Descrição: </b>" + "Malvinas" + "<br>" +
+                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=47625 target='_blank'>Link.</a>" + "<br>" +
+                               "<b>Área (km &#178; ): " + "<br>" +
+                               "<b>Obs.: </b>"
+                               );
+                }
+              }
+            ).addTo(map);
+            
+          var FALK_EEZ = L.geoJSON(falklands_eez.responseJSON, {
+              style: {
+                color: '#133863',
+                weight: 2,
+                fillOpacity: .25
+              },
+              onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN) - Malvinas" + "<br>" +
+                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=25513 target='_blank'>Link.</a>" + "<br>" +
+                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
+                               "<b>Obs.: </b>"
                                );
                 }
               }
