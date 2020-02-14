@@ -60,7 +60,7 @@
     <script>
         // Add AJAX request for data
         var latinamerica = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/LatinAmerica.geojson",
+          url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/LatinAmerica.geojson",
           dataType: "json",
           success: console.log("Latin America boundaries data successfully loaded."),
           error: function (xhr) {
@@ -96,7 +96,7 @@
         })
 
         var eez = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/EEZ.geojson",
+          url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/EEZ.geojson",
           dataType: "json",
           success: console.log("EEZ data successfully loaded."),
           error: function (xhr) {
@@ -104,17 +104,8 @@
           }
         })
         
-        var trindade = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/Trindade.geojson",
-          dataType: "json",
-          success: console.log("Trindade data successfully loaded."),
-          error: function (xhr) {
-            alert(xhr.statusText)
-          }
-        })
-        
         var extensao = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/br_extensao_pc.geojson",
+          url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/extensao_PC/BRA_extensao_pc.geojson",
           dataType: "json",
           success: console.log("CP Extension data successfully loaded."),
           error: function (xhr) {
@@ -122,26 +113,8 @@
           }
         })
         
-        var arg_eez = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/ARG_EEZ.geojson",
-          dataType: "json",
-          success: console.log("ARG-EEZ data successfully loaded."),
-          error: function (xhr) {
-            alert(xhr.statusText)
-          }
-        })        
-        
-        var falklands_eez = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/malvinas-falklands.geojson",
-          dataType: "json",
-          success: console.log("Falklands EEZ data successfully loaded."),
-          error: function (xhr) {
-            alert(xhr.statusText)
-          }
-        })  
-        
         var falklands = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/malvinas.geojson",
+          url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/malvinas.geojson",
           dataType: "json",
           success: console.log("Falklands data successfully loaded."),
           error: function (xhr) {
@@ -149,26 +122,9 @@
           }
         }) 
         
-        var ury_eez = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/URY_EEZ.geojson",
-          dataType: "json",
-          success: console.log("URY-EEZ data successfully loaded."),
-          error: function (xhr) {
-            alert(xhr.statusText)
-          }
-        })
-        
-        var arg_ury = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/URY-ARG_TREATY.geojson",
-          dataType: "json",
-          success: console.log("ARG-URY Treaty data successfully loaded."),
-          error: function (xhr) {
-            alert(xhr.statusText)
-          }
-        })
 
         var cz = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/CZ.geojson",
+          url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/CZ/BRA_CZ.geojson",
           dataType: "json",
           success: console.log("CZ data successfully loaded."),
           error: function (xhr) {
@@ -177,7 +133,7 @@
         })
 
         var ts = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/TS.geojson",
+          url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/TS/BRA_TS.geojson",
           dataType: "json",
           success: console.log("TS data successfully loaded."),
           error: function (xhr) {
@@ -186,7 +142,7 @@
         })
 
         var iw = $.ajax({
-          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/IW.geojson",
+          url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/IW/BRA_IW.geojson",
           dataType: "json",
           success: console.log("IW data successfully loaded."),
           error: function (xhr) {
@@ -303,9 +259,8 @@
         })        
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
-        $.when(latinamerica, ufs, municipios, uc, eez, trindade, extensao, cz, 
-        ts, iw, arg_eez, falklands, falklands_eez, ury_eez, arg_ury, 
-        portos, cessoes, ocupacoes, certdisp, 
+        $.when(latinamerica, ufs, municipios, uc, eez, extensao, cz, 
+        ts, iw, falklands, portos, cessoes, ocupacoes, certdisp, 
         LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
         LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
@@ -347,6 +302,20 @@
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             });
             
+            var Esri_OceanBasemap = L.tileLayer(
+              'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
+               maxZoom: 13,
+               label: "Esri Ocean Basemap",
+	             attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri'
+	          });
+	             
+	         var Esri_NatGeoWorldMap = L.tileLayer(
+	           'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	             maxZoom: 16,
+	             label: 'Esri NatGeo World Map',
+	             attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC'
+	          });
+            
             var Google = L.tileLayer(
               'http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',{
                minZoom: 0,
@@ -354,17 +323,10 @@
               label: "Google" 
             });
             
-            var Esri_OceanBasemap = L.tileLayer(
-              'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
-               maxZoom: 13,
-               label: "Esri Ocean Basemap",
-	             attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri'
-	             });
-            
             var map = L.map('map', {
-                center: [-15.77972, -47.92972],
+                center: [-27.7000, -50.5000],
                 zoomControl: false,
-                zoom: 4,
+                zoom: 8,
                 preferCanvas: false,
                 attributionControl: false,
                 fullscreenControl: true,
@@ -374,7 +336,7 @@
             });
             
             // Add Minimap
-            var miniMap = new L.Control.MiniMap(OpenStreetMap_Mapnik, {
+            var miniMap = new L.Control.MiniMap(Esri_NatGeoWorldMap, {
                 position: 'topright',
                 toggleDisplay: true
               }
@@ -468,38 +430,25 @@
             }
             ).addTo(map);
 
-            var EEZ = L.geoJSON(eez.responseJSON, {
-              style: {
-                color: '#133863',
-                weight: 2,
-                fillOpacity: .25
-              },
-              onEachFeature: function( feature, layer ){
-                             layer.bindPopup(
-                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN)" + "<br>" +
-                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=8464 target='_blank'>Link.</a>" + "<br>" +
-                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
-                               "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental de jun/2019."
-                               );
-                }
-              }
-            ).addTo(map);
+            function link(feature){
+              return "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=" + feature.properties.mrgid + " target='_blank    '>Link.</a>"; 
+            }
             
-            var TRINDADE = L.geoJSON(trindade.responseJSON, {
-              style: {
-                color: '#133863',
-                weight: 2,
-                fillOpacity: .25
-              },
-              onEachFeature: function( feature, layer ){
-                             layer.bindPopup(
-                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN) - Trindade" + "<br>" +
-                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=8381 target='_blank'>Link.</a>" + "<br>" +
-                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
-                               "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental de jun/2019."
-                               );
-                }
+            var EEZ = L.geoJSON(eez.responseJSON, {
+            style: {
+              color: '#133863',
+              weight: 2,
+              fillOpacity: .25
+            },
+            onEachFeature: function( feature, layer ){
+                           layer.bindPopup(
+                             "<b>Descrição: </b>" + feature.properties.geoname + "<br>" +
+                             "<b>Fonte: </b>" + link(feature) + "<br>" +
+                             "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "    <br>" +
+                             "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental."
+                             );
               }
+            }
             ).addTo(map);
             
             var EXTENSAO = L.geoJSON(extensao.responseJSON, {
@@ -513,23 +462,6 @@
                                "<b>Nome: </b>" + feature.properties.nome + "<br>" +
                                "<b>Região: </b>" +  feature.properties.regiao + "<br>" +
                                "<b>Área (km &#178; ): "
-                               );
-                }
-              }
-            ).addTo(map);
-            
-            var ARG_EEZ = L.geoJSON(arg_eez.responseJSON, {
-              style: {
-                color: '#133863',
-                weight: 2,
-                fillOpacity: .25
-              },
-              onEachFeature: function( feature, layer ){
-                             layer.bindPopup(
-                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN) - Argentina" + "<br>" +
-                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=8466 target='_blank'>Link.</a>" + "<br>" +
-                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
-                               "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental."
                                );
                 }
               }
@@ -552,56 +484,6 @@
               }
             ).addTo(map);
             
-          var FALK_EEZ = L.geoJSON(falklands_eez.responseJSON, {
-              style: {
-                color: '#133863',
-                weight: 2,
-                fillOpacity: .25
-              },
-              onEachFeature: function( feature, layer ){
-                             layer.bindPopup(
-                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN) - Malvinas" + "<br>" +
-                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=25513 target='_blank'>Link.</a>" + "<br>" +
-                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
-                               "<b>Obs.: </b>"
-                               );
-                }
-              }
-            ).addTo(map);
-            
-            var URY_EEZ = L.geoJSON(ury_eez.responseJSON, {
-              style: {
-                color: '#133863',
-                weight: 2,
-                fillOpacity: .25
-              },
-              onEachFeature: function( feature, layer ){
-                             layer.bindPopup(
-                               "<b>Descrição: </b>" + "Zona Econômica Exclusiva (200 MN) - Uruguai" + "<br>" +
-                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=8467  target='_blank'>Link.</a>" + "<br>" +
-                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
-                               "<b>Obs.: </b>" + "Não contempla a extensão da plataforma continental."
-                               );
-                }
-              }
-            ).addTo(map);
-            
-            var ARG_URY = L.geoJSON(arg_ury.responseJSON, {
-              style: {
-                color: '#133863',
-                weight: 2,
-                fillOpacity: .25
-              },
-              onEachFeature: function( feature, layer ){
-                             layer.bindPopup(
-                               "<b>Descrição: </b>" + "Treaty between Uruguay and Argentina concerning the Rio de la Plata and the Corresponding Maritime Boundary " + "<br>" +
-                               "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=48961  target='_blank'>Link.</a>" + "<br>" +
-                               "<b>Área (km &#178; ): " + feature.properties.area_km2.toLocaleString('de-DE', { maximumFractionDigits: 2 })
-                               );
-                }
-              }
-            ).addTo(map);
-
             var CZ = L.geoJSON(cz.responseJSON, {
               style:{
                 color: '#236AB9',
@@ -927,7 +809,6 @@
                 "Mar Territorial (12MN)": TS,
                 "Zona Contígua (24MN)": CZ,
                 "Zona Econômica Exclusiva (200MN)": EEZ,
-                "ZEE Trindade": TRINDADE,
                 "Extensão da PC": EXTENSAO
               },
               "Ambiental": {
@@ -944,8 +825,8 @@
             };
             
             var basemaps = [
-              Esri_OceanBasemap, Esri_WorldImagery, Google, OpenStreetMap_Mapnik, 
-              OpenTopoMap, wmsLayer
+              wmsLayer, Esri_OceanBasemap, Esri_WorldImagery, Esri_NatGeoWorldMap,
+              Google, OpenStreetMap_Mapnik, OpenTopoMap
               
               ]
             
