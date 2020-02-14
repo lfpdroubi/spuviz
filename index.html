@@ -347,6 +347,13 @@
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             });
             
+            var Google = L.tileLayer(
+              'http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',{
+               minZoom: 0,
+              maxZoom: 21,
+              label: "Google" 
+            });
+            
             var Esri_OceanBasemap = L.tileLayer(
               'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
                maxZoom: 13,
@@ -937,7 +944,7 @@
             };
             
             var basemaps = [
-              Esri_OceanBasemap, Esri_WorldImagery, OpenStreetMap_Mapnik , 
+              Esri_OceanBasemap, Esri_WorldImagery, Google, OpenStreetMap_Mapnik, 
               OpenTopoMap, wmsLayer
               
               ]
