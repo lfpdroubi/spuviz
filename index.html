@@ -50,13 +50,6 @@
         height: 100%;
         width: 100vw;
       }
-      #logoContainer {
-        position: absolute;
-        z-index: 1000;
-        bottom: 40px;
-        left: 15px;
-        opacity:0.5;
-      }
     </style>
 
   </head>
@@ -429,7 +422,7 @@
                 });
               }
             }
-            ).addTo(map);
+            );
 
             function link(feature){
               return "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=" + feature.properties.MRGID + " target='_blank    '>Link.</a>"; 
@@ -894,7 +887,7 @@
 		        
 		        logo.onAdd = function(map){
 		          var div = L.DomUtil.create('div', 'logoContainer');
-		          div.innerHTML= "<img src='https://raw.githubusercontent.com/lfpdroubi/SPUData/master/SPU.jpg' width='60' height='60' />";
+		          div.innerHTML= "<img src='https://raw.githubusercontent.com/lfpdroubi/SPUData/master/SPU.jpg' width='60' height='60' style='position: absolute; bottom: -5px; left: 0px; opacity:0.5;filter:alpha(opacity=50);' />";
 		          return div;
 		        }
 		        
