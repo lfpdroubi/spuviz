@@ -1,0 +1,62 @@
+{
+  "_from": "github:tinjaw/Leaflet-Copy-Coordinates-Control",
+  "_id": "leaflet-copy-coordinates-control@0.1.6",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/leaflet-copy-coordinates-control",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "tinjaw/Leaflet-Copy-Coordinates-Control",
+    "rawSpec": "tinjaw/Leaflet-Copy-Coordinates-Control",
+    "saveSpec": "github:tinjaw/Leaflet-Copy-Coordinates-Control",
+    "fetchSpec": null,
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "github:tinjaw/Leaflet-Copy-Coordinates-Control#d9f9829a735d790012a5e1381881c19042e0ee02",
+  "_spec": "tinjaw/Leaflet-Copy-Coordinates-Control",
+  "_where": "/home/droubi/spuviz/docs",
+  "author": {
+    "name": "Chaim Krause"
+  },
+  "bugs": {
+    "url": "https://github.com/tinjaw/Leaflet-Copy-Coordinates-Control/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "Works with Leaflet to capture mouseclicks on a map and display the associated coordinates with an easy way to copy them.",
+  "devDependencies": {
+    "minify": "^4.1.3",
+    "standard": "^14.1.0",
+    "uglify-js": "^3.6.0"
+  },
+  "homepage": "https://github.com/tinjaw/Leaflet-Copy-Coordinates-Control#readme",
+  "keywords": [
+    "leaflet",
+    "clipboard",
+    "coordinates"
+  ],
+  "license": "MIT",
+  "main": "dist/Control.Coordinates.min.js",
+  "name": "leaflet-copy-coordinates-control",
+  "peerDependencies": {
+    "leaflet": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinjaw/Leaflet-Copy-Coordinates-Control.git"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run prepublishOnly:js & npm run prepublishOnly:css",
+    "prepublishOnly:css": "npx minify ./src/Control.Coordinates.css > ./dist/Control.Coordinates.min.css",
+    "prepublishOnly:js": "npx uglifyjs ./src/Control.Coordinates.js -o ./dist/Control.Coordinates.min.js",
+    "test": "standard \"src/**/*.js\"",
+    "test:fix": "standard --fix \"src/**/*.js\""
+  },
+  "version": "0.1.6"
+}
