@@ -605,8 +605,19 @@
             ).addTo(map);
 
             var Ocupacoes = L.geoJSON(ocupacoes.responseJSON, {
-                color: 'royalblue',
-                weight: 1 }
+                style: {
+                  color: 'royalblue',
+                  weight: 1
+                },
+                onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
+                               "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+                               "<b>Área Total: </b>" + feature.properties.area_total.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
+                               "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2 })
+                               );
+                }
+              }
             ).addTo(map);
 
             var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
