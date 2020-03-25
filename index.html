@@ -186,6 +186,15 @@
             alert(xhr.statusText)
           }
         })
+        
+        var autobras = $.ajax({
+          url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/autobras.geojson",
+          dataType: "json",
+          success: console.log("autobras data successfully loaded."),
+          error: function (xhr) {
+            alert(xhr.statusText)
+          }
+        })
 
         var LLTM_DEMARCADA = $.ajax({
           url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LLTM_DEMARCADA.geojson",
@@ -261,7 +270,7 @@
         /* when().done() SECTION*/
         // Add the variable for each of your AJAX requests to $.when()
         $.when(latinamerica, ufs, municipios, uc, eez, extensao, cz, 
-        ts, iw, falklands, portos, cessoes, ocupacoes, certdisp, 
+        ts, iw, falklands, portos, cessoes, ocupacoes, certdisp, autobras,
         LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
         LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
 
@@ -620,6 +629,27 @@
                 }
               }
             ).addTo(map);
+            
+              var AutObras = L.geoJSON(autobras.responseJSON, {
+                style: function(feature) {
+                  return{
+                    color: 'Violet',
+                    weight: 1
+                  }
+                },
+                onEachFeature: function( feature, layer ){
+                             layer.bindPopup(
+                               "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
+                               "<b>CNPJ: </b>" + feature.properties.cnpj + "<br>" +
+                               "<b>Protocolo: </b>" + feature.properties.protocolo + "<br>" +
+                               "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+                               "<b>Referência: </b>" + feature.properties.ref + "<br>" +
+                               "<b>Área: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 })
+                               );
+
+                }
+              }
+            ).addTo(map);
 
             var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
               style: {
@@ -804,6 +834,7 @@
                 "Cessões": Cessoes,
                 "Ocupações": Ocupacoes,
                 "Certidões de Disponibilidade": CertDisp,
+                "Autorizações de Obras": AutObras,
                 "TAUS": Pesca,
                 "Transporte Marítimo": Balsas
               },
