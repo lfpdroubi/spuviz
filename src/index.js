@@ -513,7 +513,7 @@ LPM_PRESUMIDA).done(function() {
     }
   }
   ).addTo(map);
-      
+  
   var CertDisp = L.geoJSON(certdisp.responseJSON, {
     style:{
       color: 'AntiqueWhite',
@@ -823,7 +823,18 @@ LPM_PRESUMIDA).done(function() {
     pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {icon:pesca});
     }
-  });
+  }).addTo(map);
+  
+  var oneHundredMetersOut = turf.buffer(ranchos_pesca.responseJSON, 100, { units: 'meters' });
+  
+  var roadbuf = L.geoJSON(oneHundredMetersOut, {
+    style:{
+      color: 'brown',
+      weight: 2,
+      fillOpacity: 0.25
+    }
+  }
+  ).addTo(map);
     
   var baseLayers = {
       "SIG-SC": wmsLayer,
