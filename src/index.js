@@ -1,53 +1,10 @@
 // Add AJAX request for data
+
+// Latin American Data
 var latinamerica = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/LatinAmerica.geojson",
   dataType: "json",
   success: console.log("Latin America boundaries data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
-var ufs = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/unidades_federacao.geojson",
-  dataType: "json",
-  success: console.log("Brazilian boundaries data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
-var municipios = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/municipios.geojson",
-  dataType: "json",
-  success: console.log("municipios data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
-var uc = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/ambiental/UC.geojson",
-  dataType: "json",
-  success: console.log("UC data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
-var eez = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/EEZ.geojson",
-  dataType: "json",
-  success: console.log("EEZ data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
-var extensao = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/extensao_PC/BRA_extensao_pc.geojson",
-  dataType: "json",
-  success: console.log("CP Extension data successfully loaded."),
   error: function (xhr) {
     alert(xhr.statusText);
   }
@@ -62,9 +19,18 @@ var falklands = $.ajax({
   }
 });
 
+var eez = $.ajax({
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/EEZ.geojson",
+  dataType: "json",
+  success: console.log("EEZ data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
 
+// Brasil Data
 var cz = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/CZ/BRA_CZ.geojson",
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/CZ.geojson",
   dataType: "json",
   success: console.log("CZ data successfully loaded."),
   error: function (xhr) {
@@ -73,7 +39,7 @@ var cz = $.ajax({
 });
 
 var ts = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/TS/BRA_TS.geojson",
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/TS.geojson",
   dataType: "json",
   success: console.log("TS data successfully loaded."),
   error: function (xhr) {
@@ -82,7 +48,7 @@ var ts = $.ajax({
 });
 
 var iw = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/IW/BRA_IW.geojson",
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/IW.geojson",
   dataType: "json",
   success: console.log("IW data successfully loaded."),
   error: function (xhr) {
@@ -90,8 +56,35 @@ var iw = $.ajax({
   }
 });
 
+var extensao = $.ajax({
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/extensao_pc.geojson",
+  dataType: "json",
+  success: console.log("CP Extension data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
+var ufs = $.ajax({
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/unidades_federacao.geojson",
+  dataType: "json",
+  success: console.log("Brazilian boundaries data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
+var uc = $.ajax({
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/UC.geojson",
+  dataType: "json",
+  success: console.log("UC data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
 var portos = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/portos.geojson",
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/portos.geojson",
   dataType: "json",
   success: console.log("Ports data successfully loaded."),
   error: function (xhr) {
@@ -99,6 +92,17 @@ var portos = $.ajax({
   }
 });
 
+// Santa Catarina Data
+var municipios = $.ajax({
+  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/municipios.geojson",
+  dataType: "json",
+  success: console.log("municipios data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
+// SPUData
 var cessoes = $.ajax({
   url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/cessoes.geojson",
   dataType: "json",
@@ -205,12 +209,14 @@ var ranchos_pesca = $.ajax({
   error: function (xhr) {
     alert(xhr.statusText);
   }
-});        
+});  
+
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
 $.when(latinamerica, ufs, municipios, uc, eez, extensao, cz, ts, iw, falklands, 
 portos, cessoes, ocupacoes, certdisp, autobras, LLTM_DEMARCADA, LLTM_HOMOLOGADA, 
-LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, transporte_aquaviario).done(function() {
+LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, 
+transporte_aquaviario).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
