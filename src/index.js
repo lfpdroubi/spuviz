@@ -1,6 +1,8 @@
 // Add AJAX request for data
 
-// Latin American Data
+// LATIN AMERICAN DATA
+
+// Fronteiras
 var latinamerica = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/LatinAmerica.geojson",
   dataType: "json",
@@ -10,6 +12,7 @@ var latinamerica = $.ajax({
   }
 });
 
+// Malvinas
 var falklands = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/malvinas.geojson",
   dataType: "json",
@@ -19,6 +22,7 @@ var falklands = $.ajax({
   }
 });
 
+// Zonas Econômicas Exclusivas
 var eez = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/EEZ.geojson",
   dataType: "json",
@@ -28,7 +32,9 @@ var eez = $.ajax({
   }
 });
 
-// Brasil Data
+// BRASIL DATA
+
+// Zona Contígua
 var cz = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/CZ.geojson",
   dataType: "json",
@@ -38,6 +44,7 @@ var cz = $.ajax({
   }
 });
 
+// Mar Territorial
 var ts = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/TS.geojson",
   dataType: "json",
@@ -47,6 +54,7 @@ var ts = $.ajax({
   }
 });
 
+//Águas Internas
 var iw = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/IW.geojson",
   dataType: "json",
@@ -56,6 +64,7 @@ var iw = $.ajax({
   }
 });
 
+// Extensão da plataforma continental
 var extensao = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/extensao_pc.geojson",
   dataType: "json",
@@ -65,6 +74,17 @@ var extensao = $.ajax({
   }
 });
 
+// Linha de Costa
+var linhaCosta =$.ajax({
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/ibge/linha_costa_ibge_2018.geojson",
+  dataType: "json",
+  success: console.log("Linha de Costa data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
+// Unidades da Federação
 var ufs = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/unidades_federacao.geojson",
   dataType: "json",
@@ -74,6 +94,7 @@ var ufs = $.ajax({
   }
 });
 
+// Unidades de Conservação Ambiental
 var uc = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/UC.geojson",
   dataType: "json",
@@ -83,6 +104,7 @@ var uc = $.ajax({
   }
 });
 
+// Portos públicos
 var portos = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/portos.geojson",
   dataType: "json",
@@ -92,7 +114,9 @@ var portos = $.ajax({
   }
 });
 
-// Santa Catarina Data
+
+
+// SANTA CATARINA DATA
 var municipios = $.ajax({
   url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/municipios.geojson",
   dataType: "json",
@@ -213,10 +237,10 @@ var ranchos_pesca = $.ajax({
 
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
-$.when(latinamerica, ufs, municipios, uc, eez, extensao, cz, ts, iw, falklands, 
-portos, cessoes, ocupacoes, certdisp, autobras, LLTM_DEMARCADA, LLTM_HOMOLOGADA, 
-LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, 
-transporte_aquaviario).done(function() {
+$.when(latinamerica, falklands, eez, extensao, cz, ts, iw, linhaCosta, ufs, uc, 
+municipios, portos, cessoes, ocupacoes, certdisp, autobras, transporte_aquaviario,
+LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, 
+LPM_PRESUMIDA).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -343,6 +367,23 @@ transporte_aquaviario).done(function() {
     }
   }).addTo(map);
   
+  var FALKLANDS = L.geoJSON(falklands.responseJSON, {
+    style: {
+      color: '#133863',
+      weight: 2,
+      fillOpacity: 0.25
+    },
+    onEachFeature: function( feature, layer ){
+                   layer.bindPopup(
+                     "<b>Descrição: </b>" + "Malvinas" + "<br>" +
+                     "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=47625 target='_blank'>Link.</a>" + "<br>" +
+                     "<b>Área (km &#178; ): " + "<br>" +
+                     "<b>Obs.: </b>"
+                     );
+      }
+    }
+  ).addTo(map);
+  
   var UF = L.Proj.geoJson(ufs.responseJSON, {
     style: {
       color: '#f1f4c7',
@@ -414,23 +455,6 @@ transporte_aquaviario).done(function() {
     }
   ).addTo(map);
   
-  var FALKLANDS = L.geoJSON(falklands.responseJSON, {
-    style: {
-      color: '#133863',
-      weight: 2,
-      fillOpacity: 0.25
-    },
-    onEachFeature: function( feature, layer ){
-                   layer.bindPopup(
-                     "<b>Descrição: </b>" + "Malvinas" + "<br>" +
-                     "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=47625 target='_blank'>Link.</a>" + "<br>" +
-                     "<b>Área (km &#178; ): " + "<br>" +
-                     "<b>Obs.: </b>"
-                     );
-      }
-    }
-  ).addTo(map);
-  
   var CZ = L.geoJSON(cz.responseJSON, {
     style:{
       color: '#236AB9',
@@ -479,6 +503,15 @@ transporte_aquaviario).done(function() {
                        );
         }
       }
+  ).addTo(map);
+  
+  var LINHACOSTA = L.geoJSON(linhaCosta.responseJSON, {
+    style:{
+      color: 'brown',
+      weight: 3,
+      fillOpacity: 0.5
+    }
+  }
   ).addTo(map);
       
   var CertDisp = L.geoJSON(certdisp.responseJSON, {
