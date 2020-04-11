@@ -643,8 +643,9 @@ LPM_PRESUMIDA, teste).done(function() {
                      "<b>Protocolo: </b>" + feature.properties.protocolo + "<br>" +
                      "<b>NUP: </b>" + feature.properties.nup + "<br>" +
                      "<b>Referência: </b>" + feature.properties.ref + "<br>" +
-                     "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
-                     "<b>Área União: </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })
+                     "<b>Perímetro: </b>" + turf.length(feature, {units: 'meters'}).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<br>" +
+                     "<b>Área Total: </b>" + turf.area(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
+                     "<b>Área União: </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>"
                     );
 
       }
