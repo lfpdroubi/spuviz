@@ -76,7 +76,7 @@ var extensao = $.ajax({
 
 // Linha de Costa
 var linhaCosta =$.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/ibge/linha_costa_ibge_2018.geojson",
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/ibge/linha_costa_1.geojson",
   dataType: "json",
   success: console.log("Linha de Costa data successfully loaded."),
   error: function (xhr) {
@@ -127,6 +127,9 @@ var municipios = $.ajax({
 });
 
 // SPUData
+
+// Destinação
+
 var cessoes = $.ajax({
   url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/cessoes.geojson",
   dataType: "json",
@@ -158,6 +161,18 @@ var autobras = $.ajax({
   url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/autobras.geojson",
   dataType: "json",
   success: console.log("autobras data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
+// Linhas
+
+
+var polUniao = $.ajax({
+  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/Poligonos_LPM_Homologada.geojson",
+  dataType: "json",
+  success: console.log("Polígonos da União data successfully loaded."),
   error: function (xhr) {
     alert(xhr.statusText);
   }
@@ -235,12 +250,21 @@ var ranchos_pesca = $.ajax({
   }
 });  
 
+var teste = $.ajax({
+  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/teste.geojson",
+  dataType: "json",
+  success: console.log("test data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }  
+});
+
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
 $.when(latinamerica, falklands, eez, extensao, cz, ts, iw, linhaCosta, ufs, uc, 
 municipios, portos, cessoes, ocupacoes, certdisp, autobras, transporte_aquaviario,
-LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, 
-LPM_PRESUMIDA).done(function() {
+polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, 
+LPM_PRESUMIDA, teste).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -512,25 +536,21 @@ LPM_PRESUMIDA).done(function() {
       fillOpacity: 0.5
     }
   }
-  ).addTo(map);
+  );
+
+  /*  
+  var oneHundredMetersOut = turf.buffer(linhaCosta.responseJSON, 100, { units: 'meters' });
   
-  var CertDisp = L.geoJSON(certdisp.responseJSON, {
+  var LCbuff = L.geoJSON(oneHundredMetersOut, {
     style:{
-      color: 'AntiqueWhite',
+      color: 'brown',
       weight: 2,
       fillOpacity: 0.25
-    },
-    onEachFeature: function( feature, layer ){
-                   layer.bindPopup(
-                     "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
-                     "<b>NUP: </b>" + feature.properties.nup + "<br>" +
-                     "<b>Concedida: </b>" + feature.properties.concedida  + "<br>"
-                     );
-
     }
   }
-  ).addTo(map);
-
+  );
+  */
+  
   var UC = L.geoJSON(uc.responseJSON, {
     style:{
       color: 'DarkOliveGreen',
@@ -569,11 +589,51 @@ LPM_PRESUMIDA).done(function() {
     }
   ).addTo(map);
   
+  function areaUniao(feature){
+    
+    f = polUniao.responseJSON.features;
+    
+    conflictlist = [];
+
+    for (var j = 0; j < f.length; j++) {
+
+      var parcel = f[j];
+
+      console.log("Processing", j);
+        var conflict = turf.intersect(feature, parcel);
+          if (conflict !== null) {
+              conflictlist.push(conflict);
+          }
+    }
+    
+    return(turf.area(turf.featureCollection(conflictlist)));
+  }
+
+      
+  
+  var CertDisp = L.geoJSON(certdisp.responseJSON, {
+    style:{
+      color: 'Grey',
+      weight: 2,
+      fillOpacity: 0.25
+    },
+    onEachFeature: function( feature, layer ){
+                   layer.bindPopup(
+                     "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
+                     "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+                     "<b>Concedida: </b>" + feature.properties.concedida  + "<br>"
+                     );
+
+    }
+  }
+  ).addTo(map);
+  
   var Cessoes = L.geoJSON(cessoes.responseJSON, {
       style: function(feature) {
         return{
-          color: 'red',
-          weight: 1
+          color: 'Grey',
+          weight: 2,
+          fillOpacity: 0.25
         };
       },
       onEachFeature: function( feature, layer ){
@@ -583,8 +643,9 @@ LPM_PRESUMIDA).done(function() {
                      "<b>Protocolo: </b>" + feature.properties.protocolo + "<br>" +
                      "<b>NUP: </b>" + feature.properties.nup + "<br>" +
                      "<b>Referência: </b>" + feature.properties.ref + "<br>" +
-                     "<b>Área: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 })
-                     );
+                     "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
+                     "<b>Área União: </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })
+                    );
 
       }
     }
@@ -592,8 +653,9 @@ LPM_PRESUMIDA).done(function() {
 
   var Ocupacoes = L.geoJSON(ocupacoes.responseJSON, {
       style: {
-        color: 'royalblue',
-        weight: 1
+        color: 'Grey',
+        weight: 2,
+        fillOpacity: 0.25
       },
       onEachFeature: function( feature, layer ){
                    layer.bindPopup(
@@ -610,8 +672,9 @@ LPM_PRESUMIDA).done(function() {
   var AutObras = L.geoJSON(autobras.responseJSON, {
       style: function(feature) {
         return{
-          color: 'Violet',
-          weight: 1
+          color: 'Grey',
+          weight:  2,
+          fillOpacity: 0.25
         };
       },
       onEachFeature: function( feature, layer ){
@@ -627,6 +690,28 @@ LPM_PRESUMIDA).done(function() {
       }
     }
   ).addTo(map);
+  
+  var POLUNIAO = L.geoJSON(polUniao.responseJSON, {
+    style: {
+      color: 'Tomato',
+      weight: 2
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Tipo: </b>" + feature.properties.TIPO + "<br>" +
+        "<b>Processo: </b>" + feature.properties.PROCESSO + "<br>" +
+        "<b>Trecho: </b>" + feature.properties.TRECHO  + "<br>" +
+        "<b>Subtrecho: </b>" + feature.properties.SUBTRECHO  + "<br>" +
+        "<b>LPM_LTM: </b>" + feature.properties.LPM_LTM  + "<br>" +
+        "<b>Fonte: </b>" + feature.properties.FONTE  + "<br>" +
+        "<b>Área: </b>" + feature.properties.AREA_M2_FM  + "m <sup>2</sup><br>" +
+        "<b>Status: </b>" + feature.properties.STATUS  + "<br>" +
+        "<b>Edital: </b>" + feature.properties.EDITAL_NUM  + "<br>" +
+        "<b>Data da homologação: </b>" + feature.properties.DATA_HOMOL
+      );
+    }
+  }
+  );
 
   var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
     style: {
@@ -823,18 +908,18 @@ LPM_PRESUMIDA).done(function() {
     pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {icon:pesca});
     }
-  }).addTo(map);
+  });
   
-  var oneHundredMetersOut = turf.buffer(ranchos_pesca.responseJSON, 100, { units: 'meters' });
+  var fiftyMetersOut = turf.buffer(ranchos_pesca.responseJSON, 50, { units: 'meters' });
   
-  var roadbuf = L.geoJSON(oneHundredMetersOut, {
+  var TAUSbuff = L.geoJSON(fiftyMetersOut, {
     style:{
       color: 'brown',
       weight: 2,
       fillOpacity: 0.25
     }
   }
-  ).addTo(map);
+  );
     
   var baseLayers = {
       "SIG-SC": wmsLayer,
@@ -851,6 +936,7 @@ LPM_PRESUMIDA).done(function() {
       "Certidões de Disponibilidade": CertDisp,
       "Autorizações de Obras": AutObras,
       "TAUS": Pesca,
+      "TAUS (Buffer)": TAUSbuff,
       "Transporte Marítimo": Balsas
     },
     "Limites territoriais":{
@@ -867,6 +953,9 @@ LPM_PRESUMIDA).done(function() {
       "Unidades de Conservação": UC
     },
     "Linhas": {
+      "Linha de Costa": LINHACOSTA,
+    //  "Linha de Costa (Buffer)": LCbuff,
+      "Polígonos da União": POLUNIAO,
       "LPM Homologada": LPM_HOM,
       "LPM Demarcada": LPM_DEM,
       "LPM Presumida": LPM_PRE,
