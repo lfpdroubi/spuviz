@@ -319,6 +319,7 @@ LPM_PRESUMIDA, teste).done(function() {
   });
   
   var map = L.map('map', {
+      drawControl: true,
       center: [-27.7000, -50.5000],
       zoomControl: false,
       zoom: 8,
@@ -329,6 +330,16 @@ LPM_PRESUMIDA, teste).done(function() {
         position: 'topright'
       }
   });
+  
+  // FeatureGroup is to store editable layers
+  var drawnItems = new L.FeatureGroup();
+  map.addLayer(drawnItems);
+  var drawControl = new L.Control.Draw({
+      edit: {
+          featureGroup: drawnItems
+      }
+  });
+  map.addControl(drawControl);
   
   // Add Minimap
   var miniMap = new L.Control.MiniMap(Esri_NatGeoWorldMap, {
