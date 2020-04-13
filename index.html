@@ -54,9 +54,28 @@
           padding: 0;
           margin: 0;
       }
-      html, body, #map {
-        height: 100%;
-        width: 100vw;
+      #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+      #delete, #export {
+        position: absolute;
+        top:220px;
+        right:10px;
+        z-index:9999;
+        background:white;
+        color:black;
+        padding:6px;
+        border-radius:4px;
+        font-family: 'Helvetica Neue';
+        cursor: pointer;
+        font-size:12px;
+        text-decoration:none;
+        }
+      #export {
+        top: 250px;
       }
     </style>
 
@@ -67,6 +86,8 @@
     
     <!-- MAP SCRIPT -->
     <script src="src/index.js"></script>
+    <div id='delete'>Delete Features</div>
+    <a href='#' id='export'>Export Features</a>
   </body>
 
 </html>
