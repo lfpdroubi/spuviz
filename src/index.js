@@ -327,7 +327,9 @@ LPM_PRESUMIDA, teste).done(function() {
       fullscreenControl: true,
       fullscreenControlOptions: {
         position: 'topright'
-      }
+      },
+      drawControl: false,
+      measureControl:true,
   });
   
   // Add Minimap
