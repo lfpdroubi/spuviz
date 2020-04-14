@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="lib/leaflet-betterscale/L.Control.BetterScale.css" />
     <link rel="stylesheet" href="lib/leaflet-draw/dist/leaflet.draw.css" />
     <link rel="stylesheet" href="lib/leaflet.measurecontrol/leaflet.measurecontrol.css" />
+<!--    <link rel="stylesheet" href="lib/leafpm/inst/htmlwidgets/build/leaflet.pm.css" />         -->
 
 
     <!-- Add jQuery -->
@@ -48,6 +49,10 @@
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
     <script src="lib/leaflet-draw/dist/leaflet.draw.js"></script>
     <script src="lib/leaflet.measurecontrol/leaflet.measurecontrol.js"></script>
+<!--     <script src="lib/leaflet-filelayer/src/leaflet.filelayer.js"></script> -->
+    <script src="https://unpkg.com/togeojson@0.16.0"></script>
+    <script src="https://unpkg.com/leaflet-filelayer@1.2.0"></script>
+<!--    <script src="lib/leafpm/inst/htmlwidgets/build/leaflet.pm.min.js"></script>     -->
     
     <style type="text/css">
       body {
@@ -76,6 +81,11 @@
         }
       #export {
         top: 250px;
+      }
+      .icon {
+        max-width: 70%;
+        max-height: 70%;
+        margin: 4px;
       }
     </style>
 

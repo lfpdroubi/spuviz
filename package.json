@@ -25,6 +25,7 @@
     "leaflet-copy-coordinates-control": "github:tinjaw/Leaflet-Copy-Coordinates-Control",
     "leaflet-draw": "^1.0.4",
     "leaflet-easyprint": "^2.1.9",
+    "leaflet-filelayer": "^1.2.0",
     "leaflet-image": "^0.4.0",
     "leaflet-minimap": "^3.6.1",
     "leaflet-search": "^2.9.8",

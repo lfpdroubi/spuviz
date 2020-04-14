@@ -372,6 +372,7 @@ LPM_PRESUMIDA, teste).done(function() {
 
   // Adds SIRGAS2000 GeoJSON
   var LatinAmerica = L.geoJSON(latinamerica.responseJSON, {
+    snapIgnore : true,
     style: function(feature) {
       return{
         fillOpacity: 0.25,
@@ -393,6 +394,7 @@ LPM_PRESUMIDA, teste).done(function() {
   }).addTo(map);
   
   var FALKLANDS = L.geoJSON(falklands.responseJSON, {
+    snapIgnore : true,
     style: {
       color: '#133863',
       weight: 2,
@@ -410,6 +412,7 @@ LPM_PRESUMIDA, teste).done(function() {
   ).addTo(map);
   
   var UF = L.Proj.geoJson(ufs.responseJSON, {
+    snapIgnore : true,
     style: {
       color: '#f1f4c7',
       weight: 2,
@@ -428,6 +431,7 @@ LPM_PRESUMIDA, teste).done(function() {
   }).addTo(map);
   
   var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
+    snapIgnore : true,
     style: areaStyle,
     onEachFeature: function( feature, layer ){
       layer.bindPopup(
@@ -448,12 +452,13 @@ LPM_PRESUMIDA, teste).done(function() {
   }
   
   var EEZ = L.geoJSON(eez.responseJSON, {
-  style: {
-    color: '#133863',
-    weight: 2,
-    fillOpacity: 0.25
-  },
-  onEachFeature: function( feature, layer ){
+    snapIgnore : true,
+    style: {
+      color: '#133863',
+      weight: 2,
+      fillOpacity: 0.25
+    },
+    onEachFeature: function( feature, layer ){
                  layer.bindPopup(
                    "<b>Descrição: </b>" + feature.properties.GEONAME + "<br>" +
                    "<b>Fonte: </b>" + link(feature) + "<br>" +
@@ -462,9 +467,10 @@ LPM_PRESUMIDA, teste).done(function() {
                    );
     }
   }
-  ).addTo(map);
+  );
   
   var EXTENSAO = L.geoJSON(extensao.responseJSON, {
+    snapIgnore : true,
     style: {
       color: 'LightGray',
       weight: 2,
@@ -478,9 +484,10 @@ LPM_PRESUMIDA, teste).done(function() {
                      );
       }
     }
-  ).addTo(map);
+  );
   
   var CZ = L.geoJSON(cz.responseJSON, {
+    snapIgnore : true,
     style:{
       color: '#236AB9',
       weight: 2,
@@ -495,9 +502,10 @@ LPM_PRESUMIDA, teste).done(function() {
                      );
       }
     }
-  ).addTo(map);
+  );
 
   var TS = L.geoJSON(ts.responseJSON, {
+    snapIgnore : true,
     style:{
       color: '#609CE1',
       fillOpacity: 0.25
@@ -514,6 +522,7 @@ LPM_PRESUMIDA, teste).done(function() {
   ).addTo(map);
 
   var IW = L.geoJSON(iw.responseJSON, {
+    snapIgnore : true,
     style:{
       color: '#E1ECF9',
       weight: 2,
@@ -528,9 +537,10 @@ LPM_PRESUMIDA, teste).done(function() {
                        );
         }
       }
-  ).addTo(map);
+  );
   
   var LINHACOSTA = L.geoJSON(linhaCosta.responseJSON, {
+    snapIgnore : true,
     style:{
       color: 'brown',
       weight: 3,
@@ -553,6 +563,7 @@ LPM_PRESUMIDA, teste).done(function() {
   */
   
   var UC = L.geoJSON(uc.responseJSON, {
+    snapIgnore : true,
     style:{
       color: 'DarkOliveGreen',
       weight: 2,
@@ -1043,7 +1054,26 @@ LPM_PRESUMIDA, teste).done(function() {
   logo.addTo(map);
   
   var featureGroup = L.featureGroup().addTo(map);
+  
+  /*
+  // add leaflet-geoman controls with some options to the map
+  map.pm.addControls({
+    position: 'topleft',
+    drawCircle: true,
+    edit: {
+          featureGroup: featureGroup
+      }
+  });
+  
+  map.pm.setLang('pt_br');
+  
+  map.on('pm:create', function(e) {
 
+      // Each time a feaute is created, it's added to the over arching feature group
+      featureGroup.addLayer(e.layer);
+  });
+  */
+  
   var drawControl = new L.Control.Draw({
       edit: {
           featureGroup: featureGroup
@@ -1073,5 +1103,40 @@ LPM_PRESUMIDA, teste).done(function() {
     document.getElementById('export').setAttribute('href', 'data:' + convertedData);
     document.getElementById('export').setAttribute('download','data.geojson');
   }
-
+  
+  L.Control.FileLayerLoad.LABEL = '<img class="icon" src="folder.svg" alt="file icon"/>';
+  control = L.Control.fileLayerLoad({
+      // Allows you to use a customized version of L.geoJson.
+      // For example if you are using the Proj4Leaflet leaflet plugin,
+      // you can pass L.Proj.geoJson and load the files into the
+      // L.Proj.GeoJson instead of the L.geoJson.
+      layer: L.geoJson,
+      // See http://leafletjs.com/reference.html#geojson-options
+      layerOptions: {
+        style: {
+          color:'red',
+          opacity: 1.0,
+          fillOpacity: 0.5,
+          weight: 2,
+          clickable: false
+        }
+      },
+      // Add to map after loading (default: true) ?
+      addToMap: true,
+      // File size limit in kb (default: 1024) ?
+      fileSizeLimit: 1024,
+      // Restrict accepted file formats (default: .geojson, .json, .kml, and .gpx) ?
+      formats: [
+          '.geojson',
+          '.kml'
+      ]
+  });
+  
+  control.addTo(map);
+  
+  control.loader.on('data:loaded', function (e) {
+      var layer = e.layer;
+      console.log(layer);
+  });
+  
 });
