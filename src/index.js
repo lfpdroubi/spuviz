@@ -329,7 +329,21 @@ LPM_PRESUMIDA, teste).done(function() {
         position: 'topright'
       },
       measureControl:true,
-  });
+  }),
+  geojsonOpts = {
+			onEachFeature: function(feature, layer) {
+				return layer.bindPopup(
+				  "<b>RIP: </b>" + feature.properties.rip + "<br>" +
+          "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
+          "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+          "<b>Perímetro: </b>" + turf.length(feature, {units: 'meters'}).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<br>" +
+          "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
+          "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
+          "<b>Área Total (turf): </b>" + turf.area(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
+          "<b>Área União (turf): </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>"
+          );
+			}
+	};
   
   // Add Minimap
   var miniMap = new L.Control.MiniMap(Esri_NatGeoWorldMap, {
@@ -569,6 +583,18 @@ LPM_PRESUMIDA, teste).done(function() {
     }
   ).addTo(map);
   
+  // Adds Union destination objects
+  
+  var Destinacao = L.layerGroup([
+		L.geoJson(certdisp.responseJSON, geojsonOpts),
+		L.geoJson(cessoes.responseJSON, geojsonOpts),
+		L.geoJson(ocupacoes.responseJSON, geojsonOpts),
+		L.geoJson(autobras.responseJSON, geojsonOpts)
+	]
+	).addTo(map);
+	
+  /*
+  
   var CertDisp = L.geoJSON(certdisp.responseJSON, {
     style:{
       color: 'Grey',
@@ -649,6 +675,8 @@ LPM_PRESUMIDA, teste).done(function() {
       }
     }
   ).addTo(map);
+  
+  */
   
   var POLUNIAO = L.geoJSON(polUniao.responseJSON, {
     style: {
@@ -888,15 +916,16 @@ LPM_PRESUMIDA, teste).done(function() {
       };
 
   var groupedOverlays = {
-    "Destinação": {
-      "Portos": Portos,
-      "Cessões": Cessoes,
-      "Ocupações": Ocupacoes,
-      "Certidões de Disponibilidade": CertDisp,
-      "Autorizações de Obras": AutObras,
+    "SPU": {
+      "Destinação": Destinacao,
+//      "Cessões": Cessoes,
+//      "Ocupações": Ocupacoes,
+//      "Certidões de Disponibilidade": CertDisp,
+//      "Autorizações de Obras": AutObras,
       "TAUS": Pesca,
       "TAUS (Buffer)": TAUSbuff,
-      "Transporte Marítimo": Balsas
+      "Transporte Marítimo": Balsas,
+      "Portos": Portos
     },
     "Limites territoriais":{
       "América Latina": LatinAmerica,
@@ -942,14 +971,18 @@ LPM_PRESUMIDA, teste).done(function() {
   }).addTo(map);
 
   var searchControl = new L.Control.Search({
-    layer: Cessoes,
+    layer: Destinacao,
   	propertyName: 'interessado',
     marker: false,
     moveToLocation: function(latlng, title, map) {
         //map.fitBounds( latlng.layer.getBounds() );
         var zoom = map.getBoundsZoom(latlng.layer.getBounds());
         map.setView(latlng, zoom); // access the zoom
-        }
+        },
+    buildTip: function(text, val) {
+			var type = val.layer.feature.properties.destinacao;
+			return '<a href="#" class="'+ type + '">' + text + '<b> ' + type + '</b></a>';
+		}
   }
   ).addTo(map);
 

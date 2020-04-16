@@ -1,0 +1,24 @@
+.cessao.search-tip b {
+	background: #f66
+}
+
+.ocupacao.search-tip b {
+	background: #f6f
+}
+
+.disponibilidade.search-tip b {
+	background: #66f
+}
+
+.search-tip {
+	white-space: nowrap;
+}
+
+.search-tip b {
+  color: #fff;
+	display: inline-block;
+	clear: left;
+	float: right;
+	padding: 0 4px;
+	margin-left: 4px;
+}
