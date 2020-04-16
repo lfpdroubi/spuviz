@@ -675,7 +675,7 @@ LPM_PRESUMIDA, teste).done(function() {
                      "<b>RIP: </b>" + feature.properties.rip + "<br>" +
                      "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
                      "<b>NUP: </b>" + feature.properties.nup + "<br>" +
-                     "<b>Área Total: </b>" + feature.properties.area_total.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
+                     "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                      "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2 })
                      );
       }
