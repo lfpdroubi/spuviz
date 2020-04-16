@@ -10,6 +10,10 @@
 	background: #66f
 }
 
+.autorizacao.search-tip b{
+  background: #DCDCDC
+}
+
 .search-tip {
 	white-space: nowrap;
 }
