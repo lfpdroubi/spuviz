@@ -15,13 +15,34 @@ function getAreaColor(feature){
   }
 }
 
+function tipoDest(feature){
+  switch(feature.properties.destinacao){
+    case 'cessao': return '#f66';
+    case 'ocupacao': return '#f6f';
+    case 'disponibilidade': return '#66f';
+    case 'autorizacao': return '#DCDCDC';
+     break;
+  }
+}
+
+function destStyle(feature){
+  return{
+    fillColor:tipoDest(feature),
+    weight: 2,
+    opacity: 1,
+    color: 'white',
+    dashArray: ((feature.properties.concedida) ? 0 : 10),
+    fillOpacity: 0.5
+  };
+}
+
 function areaStyle(feature){
 	return {
   	fillColor: getAreaColor(feature),
     weight: 2,
     opacity: 1,
     color: 'white',
-    dashArray: '3',
+    dashArray: 3,
     fillOpacity: 0.5
   };
 }

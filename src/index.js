@@ -114,7 +114,15 @@ var portos = $.ajax({
   }
 });
 
-
+// Aeroportos
+var aeroportos = $.ajax({
+  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/aeroportos.geojson",
+  dataType: "json",
+  success: console.log("Airports data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
 
 // SANTA CATARINA DATA
 var municipios = $.ajax({
@@ -262,9 +270,9 @@ var teste = $.ajax({
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
 $.when(latinamerica, falklands, eez, extensao, cz, ts, iw, linhaCosta, ufs, uc, 
-municipios, portos, cessoes, ocupacoes, certdisp, autobras, transporte_aquaviario,
-polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, 
-LPM_PRESUMIDA, teste).done(function() {
+municipios, portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, 
+transporte_aquaviario, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
+LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -331,6 +339,7 @@ LPM_PRESUMIDA, teste).done(function() {
       measureControl:true,
   }),
   geojsonOpts = {
+    style: destStyle,
 			onEachFeature: function(feature, layer) {
 				return layer.bindPopup(
 				  "<b>RIP: </b>" + feature.properties.rip + "<br>" +
@@ -340,7 +349,9 @@ LPM_PRESUMIDA, teste).done(function() {
           "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
           "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
           "<b>Área Total (turf): </b>" + turf.area(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
-          "<b>Área União (turf): </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>"
+          "<b>Área União (turf): </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
+          "<b>Data Início: </b>" + feature.properties.inicio + "<br>" +
+          "<b>Data Vigência: </b>" + feature.properties.vigencia
           );
 			}
 	};
@@ -544,6 +555,29 @@ LPM_PRESUMIDA, teste).done(function() {
   );
   */
   
+  var POLUNIAO = L.geoJSON(polUniao.responseJSON, {
+    style: {
+      color: 'Tomato',
+      weight: 2
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Tipo: </b>" + feature.properties.TIPO + "<br>" +
+        "<b>Processo: </b>" + feature.properties.PROCESSO + "<br>" +
+        "<b>Trecho: </b>" + feature.properties.TRECHO  + "<br>" +
+        "<b>Subtrecho: </b>" + feature.properties.SUBTRECHO  + "<br>" +
+        "<b>LPM_LTM: </b>" + feature.properties.LPM_LTM  + "<br>" +
+        "<b>Fonte: </b>" + feature.properties.FONTE  + "<br>" +
+        "<b>Área: </b>" + feature.properties.AREA_M2_FM  + "m <sup>2</sup><br>" +
+        "<b>Status: </b>" + feature.properties.STATUS  + "<br>" +
+        "<b>Edital: </b>" + feature.properties.EDITAL_NUM  + "<br>" +
+        "<b>Data da homologação: </b>" + feature.properties.DATA_HOMOL
+      );
+    }
+  }
+  );
+
+  
   var UC = L.geoJSON(uc.responseJSON, {
     snapIgnore : true,
     style:{
@@ -582,6 +616,16 @@ LPM_PRESUMIDA, teste).done(function() {
       }
     }
   ).addTo(map);
+  
+  var Aeroportos = L.geoJSON(aeroportos.responseJSON, {
+    style: function(feature) {
+      return{
+        fillOpacity: 0.25,
+        color: 'DodgerBlue',
+        weight: 0.75
+      };
+    }
+  }).addTo(map);
   
   // Adds Union destination objects
   
@@ -678,28 +722,6 @@ LPM_PRESUMIDA, teste).done(function() {
   
   */
   
-  var POLUNIAO = L.geoJSON(polUniao.responseJSON, {
-    style: {
-      color: 'Tomato',
-      weight: 2
-    },
-    onEachFeature: function( feature, layer ){
-      layer.bindPopup(
-        "<b>Tipo: </b>" + feature.properties.TIPO + "<br>" +
-        "<b>Processo: </b>" + feature.properties.PROCESSO + "<br>" +
-        "<b>Trecho: </b>" + feature.properties.TRECHO  + "<br>" +
-        "<b>Subtrecho: </b>" + feature.properties.SUBTRECHO  + "<br>" +
-        "<b>LPM_LTM: </b>" + feature.properties.LPM_LTM  + "<br>" +
-        "<b>Fonte: </b>" + feature.properties.FONTE  + "<br>" +
-        "<b>Área: </b>" + feature.properties.AREA_M2_FM  + "m <sup>2</sup><br>" +
-        "<b>Status: </b>" + feature.properties.STATUS  + "<br>" +
-        "<b>Edital: </b>" + feature.properties.EDITAL_NUM  + "<br>" +
-        "<b>Data da homologação: </b>" + feature.properties.DATA_HOMOL
-      );
-    }
-  }
-  );
-
   var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
     style: {
       color: 'red',
@@ -923,9 +945,21 @@ LPM_PRESUMIDA, teste).done(function() {
 //      "Certidões de Disponibilidade": CertDisp,
 //      "Autorizações de Obras": AutObras,
       "TAUS": Pesca,
-      "TAUS (Buffer)": TAUSbuff,
-      "Transporte Marítimo": Balsas,
-      "Portos": Portos
+      "TAUS (Buffer)": TAUSbuff
+    },
+    "Terrenos de Marinha": {
+      "Polígonos da União": POLUNIAO,
+      "LPM Homologada": LPM_HOM,
+      "LPM Demarcada": LPM_DEM,
+      "LPM Presumida": LPM_PRE,
+      "LLTM Homologada": LLTM_HOM,
+      "LLTM Demarcada": LLTM_DEM,
+      "LLTM Presumida": LLTM_PRE
+    },
+    "Infraestrutura": {
+      "Portos": Portos,
+      "Aeroportos": Aeroportos,
+      "Transporte Marítimo": Balsas
     },
     "Limites territoriais":{
       "América Latina": LatinAmerica,
@@ -937,19 +971,10 @@ LPM_PRESUMIDA, teste).done(function() {
       "Zona Econômica Exclusiva (200MN)": EEZ,
       "Extensão da PC": EXTENSAO
     },
-    "Ambiental": {
-      "Unidades de Conservação": UC
-    },
-    "Linhas": {
+    "Meio Ambiente": {
       "Linha de Costa": LINHACOSTA,
-    //  "Linha de Costa (Buffer)": LCbuff,
-      "Polígonos da União": POLUNIAO,
-      "LPM Homologada": LPM_HOM,
-      "LPM Demarcada": LPM_DEM,
-      "LPM Presumida": LPM_PRE,
-      "LLTM Homologada": LLTM_HOM,
-      "LLTM Demarcada": LLTM_DEM,
-      "LLTM Presumida": LLTM_PRE
+//    "Linha de Costa (Buffer)": LCbuff,
+      "Unidades de Conservação": UC
     }
   };
   
