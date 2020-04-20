@@ -351,7 +351,9 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
           "<b>Área Total (turf): </b>" + turf.area(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
           "<b>Área União (turf): </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
           "<b>Data Início: </b>" + feature.properties.inicio + "<br>" +
-          "<b>Data Vigência: </b>" + feature.properties.vigencia
+          "<b>Data Vigência: </b>" + feature.properties.vigencia + "<br>" +
+          "<b>Centróide: </b>" + turf.getCoord(turf.centroid(feature)).toLocaleString('de-DE', { maximumFractionDigits: 2 })
+          
           );
 			}
 	};
@@ -617,6 +619,27 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
     }
   ).addTo(map);
   
+  var Aeroportos = L.geoJSON(aeroportos.responseJSON,{
+                    onEachFeature: function(feature,layer){
+                        if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
+                            console.log('Polygon detected');
+                            L.marker(turf.getCoord(turf.flip(turf.centroid(feature)))).addTo(map);
+                        }
+                   layer.bindPopup(
+                    "<b>ICAO: </b>" + feature.properties.ICAO + "<br>" +
+                    "<b>IATA: </b>" + feature.properties.IATA + "<br>" +
+                    "<b>Nome: </b>" + feature.properties.nome + "<br>" +
+                    "<b>Administração: </b>" + feature.properties.interessado + "<br>" +
+                    "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+                    "<b>Perímetro: </b>" + feature.properties.perimetro + "<br>" +
+                    "<b>Área: </b>" + feature.properties.area + "<br>"
+                  );
+                }
+  }
+  ).addTo(map);
+
+  
+  /*
   var Aeroportos = L.geoJSON(aeroportos.responseJSON, {
     style: function(feature) {
       return{
@@ -624,8 +647,20 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
         color: 'DodgerBlue',
         weight: 0.75
       };
+    },
+    onEachFeature: function( feature, layer ){
+      if (feature.geometry.type === 'Polygon') {
+        console.log('Polygon detected');
+        var centroid = turf.centroid(feature);
+        L.marker(turf.getCoords(turf.flip(centroid)), {icon:pesca}).addTo(map);
+      }
+      layer.bindPopup(
+
+      );
     }
   }).addTo(map);
+  
+  */
   
   // Adds Union destination objects
   
@@ -636,6 +671,8 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
 		L.geoJson(autobras.responseJSON, geojsonOpts)
 	]
 	).addTo(map);
+	
+
 	
   /*
   
