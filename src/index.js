@@ -329,7 +329,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
   var map = L.map('map', {
       center: [-27.7000, -50.5000],
       zoomControl: false,
-      zoom: 8,
+      zoom: 7,
       preferCanvas: false,
       attributionControl: false,
       fullscreenControl: true,
