@@ -114,7 +114,15 @@ var portos = $.ajax({
   }
 });
 
-
+// Aeroportos
+var aeroportos = $.ajax({
+  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/aeroportos.geojson",
+  dataType: "json",
+  success: console.log("Airports data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
 
 // SANTA CATARINA DATA
 var municipios = $.ajax({
@@ -262,9 +270,9 @@ var teste = $.ajax({
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
 $.when(latinamerica, falklands, eez, extensao, cz, ts, iw, linhaCosta, ufs, uc, 
-municipios, portos, cessoes, ocupacoes, certdisp, autobras, transporte_aquaviario,
-polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, LPM_HOMOLOGADA, 
-LPM_PRESUMIDA, teste).done(function() {
+municipios, portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, 
+transporte_aquaviario, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
+LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -322,14 +330,34 @@ LPM_PRESUMIDA, teste).done(function() {
       drawControl: true,
       center: [-27.7000, -50.5000],
       zoomControl: false,
-      zoom: 8,
+      zoom: 7,
       preferCanvas: false,
       attributionControl: false,
       fullscreenControl: true,
       fullscreenControlOptions: {
         position: 'topright'
-      }
-  });
+      },
+      measureControl:true,
+  }),
+  geojsonOpts = {
+    style: destStyle,
+			onEachFeature: function(feature, layer) {
+				return layer.bindPopup(
+				  "<b>RIP: </b>" + feature.properties.rip + "<br>" +
+          "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
+          "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+          "<b>Perímetro: </b>" + turf.length(feature, {units: 'meters'}).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<br>" +
+          "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
+          "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
+          "<b>Área Total (turf): </b>" + turf.area(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
+          "<b>Área União (turf): </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
+          "<b>Data Início: </b>" + feature.properties.inicio + "<br>" +
+          "<b>Data Vigência: </b>" + feature.properties.vigencia + "<br>" +
+          "<b>Centróide: </b>" + turf.getCoord(turf.centroid(feature)).toLocaleString('de-DE', { maximumFractionDigits: 2 })
+          
+          );
+			}
+	};
   
   // FeatureGroup is to store editable layers
   var drawnItems = new L.FeatureGroup();
@@ -348,40 +376,13 @@ LPM_PRESUMIDA, teste).done(function() {
     }
   ).addTo(map);
   
-  function gestaoPraiaStatus(feature){
-    switch (feature.properties.gest_praia){
-    	case 1 : return 'Sim' ;
-      case 0 : return 'Não' ;
-      	break;
-    }
-  }
-
-  function getAreaColor(feature){
-    console.log(feature);
-  	switch (feature.properties.gest_praia){
-    	case 1 : return 'OrangeRed' ;
-      case 0 : return 'LightYellow' ;
-      	break;
-    }
-  }
-
-  function areaStyle(feature){
-  	return {
-    	fillColor: getAreaColor(feature),
-      weight: 2,
-      opacity: 1,
-      color: 'white',
-      dashArray: '3',
-      fillOpacity: 0.5
-    };
-  }
-            
   // Add requested external GeoJSON to map
   
   proj4.defs('EPSG:31982', '+proj=utm +zone=22 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ');
 
   // Adds SIRGAS2000 GeoJSON
   var LatinAmerica = L.geoJSON(latinamerica.responseJSON, {
+    snapIgnore : true,
     style: function(feature) {
       return{
         fillOpacity: 0.25,
@@ -403,6 +404,7 @@ LPM_PRESUMIDA, teste).done(function() {
   }).addTo(map);
   
   var FALKLANDS = L.geoJSON(falklands.responseJSON, {
+    snapIgnore : true,
     style: {
       color: '#133863',
       weight: 2,
@@ -420,6 +422,7 @@ LPM_PRESUMIDA, teste).done(function() {
   ).addTo(map);
   
   var UF = L.Proj.geoJson(ufs.responseJSON, {
+    snapIgnore : true,
     style: {
       color: '#f1f4c7',
       weight: 2,
@@ -438,6 +441,7 @@ LPM_PRESUMIDA, teste).done(function() {
   }).addTo(map);
   
   var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
+    snapIgnore : true,
     style: areaStyle,
     onEachFeature: function( feature, layer ){
       layer.bindPopup(
@@ -453,17 +457,14 @@ LPM_PRESUMIDA, teste).done(function() {
   }
   );
 
-  function link(feature){
-    return "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=" + feature.properties.MRGID + " target='_blank    '>Link.</a>"; 
-  }
-  
   var EEZ = L.geoJSON(eez.responseJSON, {
-  style: {
-    color: '#133863',
-    weight: 2,
-    fillOpacity: 0.25
-  },
-  onEachFeature: function( feature, layer ){
+    snapIgnore : true,
+    style: {
+      color: '#133863',
+      weight: 2,
+      fillOpacity: 0.25
+    },
+    onEachFeature: function( feature, layer ){
                  layer.bindPopup(
                    "<b>Descrição: </b>" + feature.properties.GEONAME + "<br>" +
                    "<b>Fonte: </b>" + link(feature) + "<br>" +
@@ -472,9 +473,10 @@ LPM_PRESUMIDA, teste).done(function() {
                    );
     }
   }
-  ).addTo(map);
+  );
   
   var EXTENSAO = L.geoJSON(extensao.responseJSON, {
+    snapIgnore : true,
     style: {
       color: 'LightGray',
       weight: 2,
@@ -488,9 +490,10 @@ LPM_PRESUMIDA, teste).done(function() {
                      );
       }
     }
-  ).addTo(map);
+  );
   
   var CZ = L.geoJSON(cz.responseJSON, {
+    snapIgnore : true,
     style:{
       color: '#236AB9',
       weight: 2,
@@ -505,9 +508,10 @@ LPM_PRESUMIDA, teste).done(function() {
                      );
       }
     }
-  ).addTo(map);
+  );
 
   var TS = L.geoJSON(ts.responseJSON, {
+    snapIgnore : true,
     style:{
       color: '#609CE1',
       fillOpacity: 0.25
@@ -524,6 +528,7 @@ LPM_PRESUMIDA, teste).done(function() {
   ).addTo(map);
 
   var IW = L.geoJSON(iw.responseJSON, {
+    snapIgnore : true,
     style:{
       color: '#E1ECF9',
       weight: 2,
@@ -538,9 +543,10 @@ LPM_PRESUMIDA, teste).done(function() {
                        );
         }
       }
-  ).addTo(map);
+  );
   
   var LINHACOSTA = L.geoJSON(linhaCosta.responseJSON, {
+    snapIgnore : true,
     style:{
       color: 'brown',
       weight: 3,
@@ -562,7 +568,31 @@ LPM_PRESUMIDA, teste).done(function() {
   );
   */
   
+  var POLUNIAO = L.geoJSON(polUniao.responseJSON, {
+    style: {
+      color: 'Tomato',
+      weight: 2
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Tipo: </b>" + feature.properties.TIPO + "<br>" +
+        "<b>Processo: </b>" + feature.properties.PROCESSO + "<br>" +
+        "<b>Trecho: </b>" + feature.properties.TRECHO  + "<br>" +
+        "<b>Subtrecho: </b>" + feature.properties.SUBTRECHO  + "<br>" +
+        "<b>LPM_LTM: </b>" + feature.properties.LPM_LTM  + "<br>" +
+        "<b>Fonte: </b>" + feature.properties.FONTE  + "<br>" +
+        "<b>Área: </b>" + feature.properties.AREA_M2_FM  + "m <sup>2</sup><br>" +
+        "<b>Status: </b>" + feature.properties.STATUS  + "<br>" +
+        "<b>Edital: </b>" + feature.properties.EDITAL_NUM  + "<br>" +
+        "<b>Data da homologação: </b>" + feature.properties.DATA_HOMOL
+      );
+    }
+  }
+  );
+
+  
   var UC = L.geoJSON(uc.responseJSON, {
+    snapIgnore : true,
     style:{
       color: 'DarkOliveGreen',
       weight: 2,
@@ -600,27 +630,62 @@ LPM_PRESUMIDA, teste).done(function() {
     }
   ).addTo(map);
   
-  function areaUniao(feature){
-    
-    f = polUniao.responseJSON.features;
-    
-    conflictlist = [];
-
-    for (var j = 0; j < f.length; j++) {
-
-      var parcel = f[j];
-
-      console.log("Processing", j);
-        var conflict = turf.intersect(feature, parcel);
-          if (conflict !== null) {
-              conflictlist.push(conflict);
-          }
-    }
-    
-    return(turf.area(turf.featureCollection(conflictlist)));
+  var Aeroportos = L.geoJSON(aeroportos.responseJSON,{
+                    onEachFeature: function(feature,layer){
+                        if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
+                            console.log('Polygon detected');
+                            L.marker(turf.getCoord(turf.flip(turf.centroid(feature)))).addTo(map);
+                        }
+                   layer.bindPopup(
+                    "<b>ICAO: </b>" + feature.properties.ICAO + "<br>" +
+                    "<b>IATA: </b>" + feature.properties.IATA + "<br>" +
+                    "<b>Nome: </b>" + feature.properties.nome + "<br>" +
+                    "<b>Administração: </b>" + feature.properties.interessado + "<br>" +
+                    "<b>NUP: </b>" + feature.properties.nup + "<br>" +
+                    "<b>Perímetro: </b>" + feature.properties.perimetro + "<br>" +
+                    "<b>Área: </b>" + feature.properties.area + "<br>"
+                  );
+                }
   }
+  ).addTo(map);
 
-      
+  
+  /*
+  var Aeroportos = L.geoJSON(aeroportos.responseJSON, {
+    style: function(feature) {
+      return{
+        fillOpacity: 0.25,
+        color: 'DodgerBlue',
+        weight: 0.75
+      };
+    },
+    onEachFeature: function( feature, layer ){
+      if (feature.geometry.type === 'Polygon') {
+        console.log('Polygon detected');
+        var centroid = turf.centroid(feature);
+        L.marker(turf.getCoords(turf.flip(centroid)), {icon:pesca}).addTo(map);
+      }
+      layer.bindPopup(
+
+      );
+    }
+  }).addTo(map);
+  
+  */
+  
+  // Adds Union destination objects
+  
+  var Destinacao = L.layerGroup([
+		L.geoJson(certdisp.responseJSON, geojsonOpts),
+		L.geoJson(cessoes.responseJSON, geojsonOpts),
+		L.geoJson(ocupacoes.responseJSON, geojsonOpts),
+		L.geoJson(autobras.responseJSON, geojsonOpts)
+	]
+	).addTo(map);
+	
+
+	
+  /*
   
   var CertDisp = L.geoJSON(certdisp.responseJSON, {
     style:{
@@ -674,7 +739,7 @@ LPM_PRESUMIDA, teste).done(function() {
                      "<b>RIP: </b>" + feature.properties.rip + "<br>" +
                      "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
                      "<b>NUP: </b>" + feature.properties.nup + "<br>" +
-                     "<b>Área Total: </b>" + feature.properties.area_total.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
+                     "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + "<br>" +
                      "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2 })
                      );
       }
@@ -703,28 +768,8 @@ LPM_PRESUMIDA, teste).done(function() {
     }
   ).addTo(map);
   
-  var POLUNIAO = L.geoJSON(polUniao.responseJSON, {
-    style: {
-      color: 'Tomato',
-      weight: 2
-    },
-    onEachFeature: function( feature, layer ){
-      layer.bindPopup(
-        "<b>Tipo: </b>" + feature.properties.TIPO + "<br>" +
-        "<b>Processo: </b>" + feature.properties.PROCESSO + "<br>" +
-        "<b>Trecho: </b>" + feature.properties.TRECHO  + "<br>" +
-        "<b>Subtrecho: </b>" + feature.properties.SUBTRECHO  + "<br>" +
-        "<b>LPM_LTM: </b>" + feature.properties.LPM_LTM  + "<br>" +
-        "<b>Fonte: </b>" + feature.properties.FONTE  + "<br>" +
-        "<b>Área: </b>" + feature.properties.AREA_M2_FM  + "m <sup>2</sup><br>" +
-        "<b>Status: </b>" + feature.properties.STATUS  + "<br>" +
-        "<b>Edital: </b>" + feature.properties.EDITAL_NUM  + "<br>" +
-        "<b>Data da homologação: </b>" + feature.properties.DATA_HOMOL
-      );
-    }
-  }
-  );
-
+  */
+  
   var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
     style: {
       color: 'red',
@@ -941,14 +986,27 @@ LPM_PRESUMIDA, teste).done(function() {
       };
 
   var groupedOverlays = {
-    "Destinação": {
-      "Portos": Portos,
-      "Cessões": Cessoes,
-      "Ocupações": Ocupacoes,
-      "Certidões de Disponibilidade": CertDisp,
-      "Autorizações de Obras": AutObras,
+    "SPU": {
+      "Destinação": Destinacao,
+//      "Cessões": Cessoes,
+//      "Ocupações": Ocupacoes,
+//      "Certidões de Disponibilidade": CertDisp,
+//      "Autorizações de Obras": AutObras,
       "TAUS": Pesca,
-      "TAUS (Buffer)": TAUSbuff,
+      "TAUS (Buffer)": TAUSbuff
+    },
+    "Terrenos de Marinha": {
+      "Polígonos da União": POLUNIAO,
+      "LPM Homologada": LPM_HOM,
+      "LPM Demarcada": LPM_DEM,
+      "LPM Presumida": LPM_PRE,
+      "LLTM Homologada": LLTM_HOM,
+      "LLTM Demarcada": LLTM_DEM,
+      "LLTM Presumida": LLTM_PRE
+    },
+    "Infraestrutura": {
+      "Portos": Portos,
+      "Aeroportos": Aeroportos,
       "Transporte Marítimo": Balsas
     },
     "Limites territoriais":{
@@ -961,19 +1019,10 @@ LPM_PRESUMIDA, teste).done(function() {
       "Zona Econômica Exclusiva (200MN)": EEZ,
       "Extensão da PC": EXTENSAO
     },
-    "Ambiental": {
-      "Unidades de Conservação": UC
-    },
-    "Linhas": {
+    "Meio Ambiente": {
       "Linha de Costa": LINHACOSTA,
-    //  "Linha de Costa (Buffer)": LCbuff,
-      "Polígonos da União": POLUNIAO,
-      "LPM Homologada": LPM_HOM,
-      "LPM Demarcada": LPM_DEM,
-      "LPM Presumida": LPM_PRE,
-      "LLTM Homologada": LLTM_HOM,
-      "LLTM Demarcada": LLTM_DEM,
-      "LLTM Presumida": LLTM_PRE
+//    "Linha de Costa (Buffer)": LCbuff,
+      "Unidades de Conservação": UC
     }
   };
   
@@ -995,14 +1044,18 @@ LPM_PRESUMIDA, teste).done(function() {
   }).addTo(map);
 
   var searchControl = new L.Control.Search({
-    layer: Cessoes,
+    layer: Destinacao,
   	propertyName: 'interessado',
     marker: false,
     moveToLocation: function(latlng, title, map) {
         //map.fitBounds( latlng.layer.getBounds() );
         var zoom = map.getBoundsZoom(latlng.layer.getBounds());
         map.setView(latlng, zoom); // access the zoom
-        }
+        },
+    buildTip: function(text, val) {
+			var type = val.layer.feature.properties.destinacao;
+			return '<a href="#" class="'+ type + '">' + text + '<b> ' + type + '</b></a>';
+		}
   }
   ).addTo(map);
 
@@ -1051,5 +1104,91 @@ LPM_PRESUMIDA, teste).done(function() {
   }
   
   logo.addTo(map);
+  
+  var featureGroup = L.featureGroup().addTo(map);
+  
+  /*
+  // add leaflet-geoman controls with some options to the map
+  map.pm.addControls({
+    position: 'topleft',
+    drawCircle: true,
+    edit: {
+          featureGroup: featureGroup
+      }
+  });
+  
+  map.pm.setLang('pt_br');
+  
+  map.on('pm:create', function(e) {
 
+      // Each time a feaute is created, it's added to the over arching feature group
+      featureGroup.addLayer(e.layer);
+  });
+  */
+  
+  var drawControl = new L.Control.Draw({
+      edit: {
+          featureGroup: featureGroup
+      }
+  }).addTo(map);
+
+  map.on('draw:created', function(e) {
+
+      // Each time a feaute is created, it's added to the over arching feature group
+      featureGroup.addLayer(e.layer);
+  });
+
+  
+  // on click, clear all layers
+  document.getElementById('delete').onclick = function(e) {
+    featureGroup.clearLayers();
+  }
+
+  document.getElementById('export').onclick = function(e) {
+    // Extract GeoJson from featureGroup
+    var data = featureGroup.toGeoJSON();
+
+    // Stringify the GeoJson
+    var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+
+    // Create export
+    document.getElementById('export').setAttribute('href', 'data:' + convertedData);
+    document.getElementById('export').setAttribute('download','data.geojson');
+  }
+  
+  L.Control.FileLayerLoad.LABEL = '<img class="icon" src="folder.svg" alt="file icon"/>';
+  control = L.Control.fileLayerLoad({
+      // Allows you to use a customized version of L.geoJson.
+      // For example if you are using the Proj4Leaflet leaflet plugin,
+      // you can pass L.Proj.geoJson and load the files into the
+      // L.Proj.GeoJson instead of the L.geoJson.
+      layer: L.geoJson,
+      // See http://leafletjs.com/reference.html#geojson-options
+      layerOptions: {
+        style: {
+          color:'red',
+          opacity: 1.0,
+          fillOpacity: 0.5,
+          weight: 2,
+          clickable: false
+        }
+      },
+      // Add to map after loading (default: true) ?
+      addToMap: true,
+      // File size limit in kb (default: 1024) ?
+      fileSizeLimit: 1024,
+      // Restrict accepted file formats (default: .geojson, .json, .kml, and .gpx) ?
+      formats: [
+          '.geojson',
+          '.kml'
+      ]
+  });
+  
+  control.addTo(map);
+  
+  control.loader.on('data:loaded', function (e) {
+      var layer = e.layer;
+      console.log(layer);
+  });
+  
 });

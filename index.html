@@ -4,6 +4,23 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicon//apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicon//apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicon//apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicon//apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicon//apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicon//apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicon//apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon//apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="favicon//android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon//favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon//favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon//favicon-16x16.png">
+    <link rel="manifest" href="favicon//manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="favicon//ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     
     <title>SPUViz</title>
 
@@ -19,6 +36,11 @@
     <link rel="stylesheet" href="lib/leaflet-minimap/dist/Control.MiniMap.min.css" />
     <link rel="stylesheet" href="lib/leaflet-basemaps/L.Control.Basemaps.css" />
     <link rel="stylesheet" href="lib/leaflet-betterscale/L.Control.BetterScale.css" />
+    <link rel="stylesheet" href="lib/leaflet-draw/dist/leaflet.draw.css" />
+    <link rel="stylesheet" href="lib/leaflet.measurecontrol/leaflet.measurecontrol.css" />
+    <link rel="stylesheet" href="styles.css" />
+<!--    <link rel="stylesheet" href="lib/leafpm/inst/htmlwidgets/build/leaflet.pm.css" />         -->
+
 
     <!-- Add jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -43,15 +65,45 @@
     <script src="lib/proj4leaflet/src/proj4leaflet.js"></script>
     <script src="lib/leaflet-textpath/leaflet.textpath.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+    <script src="lib/leaflet-draw/dist/leaflet.draw.js"></script>
+    <script src="lib/leaflet.measurecontrol/leaflet.measurecontrol.js"></script>
+<!--     <script src="lib/leaflet-filelayer/src/leaflet.filelayer.js"></script> -->
+    <script src="https://unpkg.com/togeojson@0.16.0"></script>
+    <script src="https://unpkg.com/leaflet-filelayer@1.2.0"></script>
+<!--    <script src="lib/leafpm/inst/htmlwidgets/build/leaflet.pm.min.js"></script>     -->
     
     <style type="text/css">
       body {
           padding: 0;
           margin: 0;
       }
-      html, body, #map {
-        height: 100%;
-        width: 100vw;
+      #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+      #delete, #export {
+        position: absolute;
+        top:220px;
+        right:10px;
+        z-index:9999;
+        background:white;
+        color:black;
+        padding:6px;
+        border-radius:4px;
+        font-family: 'Helvetica Neue';
+        cursor: pointer;
+        font-size:12px;
+        text-decoration:none;
+        }
+      #export {
+        top: 250px;
+      }
+      .icon {
+        max-width: 70%;
+        max-height: 70%;
+        margin: 4px;
       }
     </style>
 
@@ -62,6 +114,9 @@
     
     <!-- MAP SCRIPT -->
     <script src="src/index.js"></script>
+    <script src="src/helpers.js"></script>
+    <div id='delete'>Delete Features</div>
+    <a href='#' id='export'>Export Features</a>
   </body>
 
 </html>
