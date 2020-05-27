@@ -343,7 +343,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
     style: destStyle,
 			onEachFeature: function(feature, layer) {
 				return layer.bindPopup(
-				  "<b>RIP: </b>" + feature.properties.rip + "<br>" +
+				  "<b>RIP: </b>" + setDefaultVal(feature.properties.rip, '-') + "<br>" +
           "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
           "<b>NUP: </b>" + feature.properties.nup + "<br>" +
           "<b>Perímetro: </b>" + turf.length(feature, {units: 'meters'}).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<br>" +
@@ -353,7 +353,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
           "<b>Área União (turf): </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
           "<b>Data Início: </b>" + feature.properties.inicio + "<br>" +
           "<b>Data Vigência: </b>" + feature.properties.vigencia + "<br>" +
-          "<b>Centróide: </b>" + turf.getCoord(turf.centroid(feature)).toLocaleString('de-DE', { maximumFractionDigits: 2 })
+          "<b>Centróide: </b>" + turf.getCoord(turf.centroid(feature)).toLocaleString('de-DE', { maximumFractionDigits: 4 })
           
           );
 			}
@@ -810,8 +810,8 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
         "<b>Status: </b>" + feature.properties.Status + "<br>" +
         "<b>SRID Origem: </b>" + feature.properties.SRID  
       );
-      layer.setText(feature.properties.Linha + " " +
-                    feature.properties.Status, {
+      layer.setText(setDefaultVal(feature.properties.Linha, '') + " " +
+                    setDefaultVal(feature.properties.Status, ''), {
                       repeat: false,
                       offset: 12,
                       attributes: {
@@ -882,8 +882,8 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
         "<b>Status: </b>" + feature.properties.Status + "<br>" +
         "<b>SRID Origem: </b>" + feature.properties.SRID  
       );
-      layer.setText(feature.properties.Linha + " " +
-                    feature.properties.Status, {
+      layer.setText(setDefaultVal(feature.properties.Linha, '') + " " +
+                    setDefaultVal(feature.properties.Status, ''), {
                       repeat: false,
                       offset: 12,
                       attributes: {

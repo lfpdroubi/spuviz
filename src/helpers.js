@@ -74,3 +74,6 @@ function areaUniao(feature){
   
   return(turf.area(turf.featureCollection(conflictlist)));
 }
+function setDefaultVal(value, defaultValue){
+   return (value === undefined) ? defaultValue : value;
+}  
