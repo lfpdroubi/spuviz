@@ -326,16 +326,18 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
      attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC'
   });
   
+  var mappos = L.Permalink.getMapLocation(zoom= 7, center = [-27.7000, -50.5000]);
+  
   var map = L.map('map', {
-//      drawControl: true,
-      center: [-27.7000, -50.5000],
+      center: mappos.center,
+	    zoom: mappos.zoom,
+//    drawControl: true,
       zoomControl: false,
-      zoom: 7,
       preferCanvas: false,
       attributionControl: false,
       fullscreenControl: true,
       fullscreenControlOptions: {
-        position: 'topright'
+      position: 'topright'
       },
       measureControl:true,
   }),
@@ -358,6 +360,8 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
           );
 			}
 	};
+	
+	L.Permalink.setup(map);
   
 /*
   // FeatureGroup is to store editable layers
