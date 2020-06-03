@@ -388,7 +388,8 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
   // Add Minimap
   var miniMap = new L.Control.MiniMap(stamenTerrain, {
       position: 'topright',
-      toggleDisplay: true
+      toggleDisplay: true,
+      zoomLevelOffset: -6
     }
   ).addTo(map);
   
