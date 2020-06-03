@@ -326,6 +326,14 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
      attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC'
   });
   
+  var stamenTerrain = L.tileLayer(
+    'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
+    subdomains: 'abcd',
+	  minZoom: 0,
+	  maxZoom: 18,
+	  ext: 'png'
+  });
+  
   var mappos = L.Permalink.getMapLocation(zoom= 7, center = [-27.7000, -50.5000]);
   
   var map = L.map('map', {
@@ -378,7 +386,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
 */
 
   // Add Minimap
-  var miniMap = new L.Control.MiniMap(Esri_NatGeoWorldMap, {
+  var miniMap = new L.Control.MiniMap(stamenTerrain, {
       position: 'topright',
       toggleDisplay: true
     }
