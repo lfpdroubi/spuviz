@@ -334,6 +334,11 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
 	  ext: 'png'
   });
   
+  var Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+	maxZoom: 16
+});
+  
   var mappos = L.Permalink.getMapLocation(zoom= 7, center = [-27.7000, -50.5000]);
   
   var map = L.map('map', {
@@ -386,7 +391,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
 */
 
   // Add Minimap
-  var miniMap = new L.Control.MiniMap(stamenTerrain, {
+  var miniMap = new L.Control.MiniMap(Esri_WorldGrayCanvas, {
       position: 'topright',
       toggleDisplay: true,
       zoomLevelOffset: -6
