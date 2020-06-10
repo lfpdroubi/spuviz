@@ -31,7 +31,7 @@ function destStyle(feature){
     weight: 2,
     opacity: 1,
     color: 'white',
-    dashArray: ((feature.properties.concedida) ? 0 : 10),
+    dashArray: ((feature.properties.concedida) ? '0' : '5, 10'),
     fillOpacity: 0.5
   };
 }
@@ -48,7 +48,8 @@ function areaStyle(feature){
 }
           
 function link(feature){
-  return "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=" + feature.properties.MRGID + " target='_blank    '>Link.</a>"; 
+  return "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=" + 
+  feature.properties.MRGID + " target='_blank    '>Link.</a>"; 
 }
 
 function Area(feature){

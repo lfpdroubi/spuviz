@@ -423,7 +423,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
         permanent: false
       });
     }
-  }).addTo(map);
+  });
   
   var FALKLANDS = L.geoJSON(falklands.responseJSON, {
     snapIgnore : true,
@@ -460,7 +460,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
           permanent: false
         });
       }
-  }).addTo(map);
+  });
   
   var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
     snapIgnore : true,
@@ -476,8 +476,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
         permanent: false
       });
     }
-  }
-  );
+  });
 
   var EEZ = L.geoJSON(eez.responseJSON, {
     snapIgnore : true,
