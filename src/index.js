@@ -398,6 +398,28 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
     }
   ).addTo(map);
   
+  // Camadas WMS do IBGE
+  
+  var options = {'format': 'image/png', 'transparent': true, 'opacity': 0.5, 
+  'info_format': 'text/html'};
+  var source = L.WMS.source("https://geoservicos.ibge.gov.br/geoserver/ows", options);
+  var UC_Estaduais = source.getLayer('CGEO:AtlasMar_UC_Estaduais');
+  var UC_Federais = source.getLayer('CGEO:AtlasMar_UC_Federais');
+  var UProtIntegral = source.getLayer('CGEO:IDS_17_Uni_de_Conserv_Protecao_Int_2_2');
+  var LinhaCosta = source.getLayer('CGEO:AtlasMar_Linhadecosta');
+  
+  /*
+  var UCs = L.WMS.tileLayer("https://geoservicos.ibge.gov.br/geoserver/ows", {
+    'tileSize': 512,
+    'layers': 'CGEO:AtlasMar_UC_Estaduais,CGEO:AtlasMar_UC_Federais',
+    'format': 'image/png',
+    'transparent': true,
+    'opacity': 0.3,
+    'attribution': "<a href='http://geoservicos.ibge.gov.br/'>IBGE</a>",
+    'info_format': 'text/html'
+  });
+  */
+  
   // Add requested external GeoJSON to map
   
   proj4.defs('EPSG:31982', '+proj=utm +zone=22 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ');
@@ -629,7 +651,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
 
     }
   }
-  ).addTo(map);
+  )
 
   var Portos = L.geoJSON(portos.responseJSON, {
     style: function(feature) {
@@ -1041,9 +1063,14 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
       "Extensão da PC": EXTENSAO
     },
     "Meio Ambiente": {
-      "Linha de Costa": LINHACOSTA,
+//      "Linha de Costa": LINHACOSTA,
+      "Linha de Costa (IBGE)": LinhaCosta,
 //    "Linha de Costa (Buffer)": LCbuff,
-      "Unidades de Conservação": UC
+      "Unidades de Conservação": UC,
+//      "Unidades de Conservação (IBGE)": UCs
+      "Unidades de Conservação Estaduais": UC_Estaduais,
+      "Unidades de Conservação Federais": UC_Federais,
+      "Unidedades de Conservação de Proteção Integral": UProtIntegral
     }
   };
   
