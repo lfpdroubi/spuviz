@@ -430,7 +430,7 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos,
   var REAFLN = sourceICA.getLayer('REA_FLORIANOPOLIS', {
     'format': 'image/png', 
     'transparent': true, 
-    'opacity': 0.8
+    'opacity': 1
   });
   
   /*
@@ -517,7 +517,7 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos,
                    layer.bindPopup(
                      "<b>Nome: </b>" + feature.properties.nome + "<br>" +
                      "<b>Região: </b>" +  feature.properties.regiao + "<br>" +
-                     "<b>Área (km &#178; ): "
+                     "<b>Área (km &#178;): </b>" + Area(feature)
                      );
       }
     }
