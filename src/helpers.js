@@ -18,6 +18,28 @@ function ibge(name){
   return URL;
 }
 
+function sinauTipo (feature){
+  console.log(feature);
+	switch (feature.properties.Tipo_Proje){
+  	case 'Parque Aquícola Marinho': return 'OrangeRed';
+    case 'Parque Aquícola Estuarino': return 'LightYellow';
+    case 'Parque Aquícola Continental': return 'LightGray';
+    case 'Área Aquícola': return 'LightBlue';
+    case 'Área emergencial': return 'red';
+    	break;
+  }
+}
+
+function sinauStyle(feature){
+  return{
+    fillColor: sinauTipo(feature),
+    weight: 2,
+    opacity: 0.5,
+    color: 'white',
+    fillOpacity: 0.5
+  };
+}
+
 function gestaoPraiaStatus(feature){
   switch (feature.properties.gest_praia){
   	case 1 : return 'Sim' ;

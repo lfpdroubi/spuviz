@@ -94,6 +94,16 @@ var aeroportos = $.ajax({
   }
 });
 
+//Parques Aquícolas
+var sinau = $.ajax({
+  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/MAPA/sinau.geojson",
+  dataType: "json",
+  success: console.log("Sinau data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
 // SANTA CATARINA DATA
 var municipios = $.ajax({
   url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/municipios.geojson",
@@ -231,7 +241,7 @@ var ranchos_pesca = $.ajax({
 
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
-$.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos, 
+$.when(latinamerica, eez, extensao, cz, ts, iw, uc, sinau, municipios, portos, 
   aeroportos, cessoes, ocupacoes, certdisp, autobras, transporte_aquaviario, 
   polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
   LPM_HOMOLOGADA, LPM_PRESUMIDA).done(function() {
@@ -408,6 +418,7 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos,
   var UC_Federais = source.getLayer('CGEO:AtlasMar_UC_Federais');
   var UProtIntegral = source.getLayer('CGEO:IDS_17_Uni_de_Conserv_Protecao_Int_2_2');
   var LinhaCosta = source.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
+  var faixaFronteira = source.getLayer('CGEO:ANMS2010_02_faixafronteira');
   
   // Camadas WMS da ANA
   
@@ -517,7 +528,9 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos,
                    layer.bindPopup(
                      "<b>Nome: </b>" + feature.properties.nome + "<br>" +
                      "<b>Região: </b>" +  feature.properties.regiao + "<br>" +
-                     "<b>Área (km &#178;): </b>" + Area(feature)
+                     "<b>Área (km &#178;): </b>" + 
+                     Area(feature).toLocaleString('de-DE', { 
+                       maximumFractionDigits: 2 })
                      );
       }
     }
@@ -575,7 +588,19 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos,
         }
       }
   );
-
+  
+  var SINAU = L.geoJSON(sinau.responseJSON,{
+    style: sinauStyle,
+    onEachFeature: function(feature, layer){
+      layer.bindPopup(
+        "<b>Tipo do Projeto: </b>" + feature.properties.Tipo_Proje + "<br>" +
+        "<b>Status: </b>" + feature.properties.StatusProc + "<br>" +
+        "<b>Área: </b>" + turf.area(feature).toLocaleString('de-DE', {
+          maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" 
+      )
+    }
+  });
+  
   /*  
   var oneHundredMetersOut = turf.buffer(linhaCosta.responseJSON, 100, { units: 'meters' });
   
@@ -1042,6 +1067,7 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos,
       "Extensão da PC": EXTENSAO
     },
     "IBGE": {
+      "Faixa de Fronteira": faixaFronteira,
       "Unidades da Federação": UF_2013,
       "Linha de Costa": LinhaCosta,
 //    "Linha de Costa (Buffer)": LCbuff,
@@ -1060,6 +1086,9 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos,
     },
     "ICA": {
       "REA Florianópolis": REAFLN
+    },
+    "MAPA": {
+      "Parques Aquícolas": SINAU
     }
   };
   
