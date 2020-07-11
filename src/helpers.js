@@ -30,12 +30,25 @@ function sinauTipo (feature){
   }
 }
 
+function sinauStatus (feature){
+  console.log(feature);
+	switch (feature.properties.StatusProc){
+  	case 'Cancelado': return '20, 20';
+    case 'Licitada e Não Vencida': return '5, 5';
+    case 'Licitada e Vencida': return '0';
+    case 'Para Licitar': return '10, 10';
+    	break;
+  }
+}
+
+
 function sinauStyle(feature){
   return{
     fillColor: sinauTipo(feature),
     weight: 2,
     opacity: 0.5,
     color: 'white',
+    dashArray: sinauStatus(feature),
     fillOpacity: 0.5
   };
 }
