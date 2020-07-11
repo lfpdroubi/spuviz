@@ -1,3 +1,23 @@
+function ibge(name){
+  
+  var owsrootUrl = 'https://geoservicos.ibge.gov.br/geoserver/ows';
+  
+  var defaultParameters = {
+      service : 'WFS',
+      version : '2.0',
+      request : 'GetFeature',
+      typeName : name,
+      outputFormat : 'application/json',
+      format_options : 'callback:getJson',
+      SrsName : 'EPSG:4326'
+  };
+  
+  var parameters = L.Util.extend(defaultParameters);
+  var URL = owsrootUrl + L.Util.getParamString(parameters);
+  
+  return URL;
+}
+
 function gestaoPraiaStatus(feature){
   switch (feature.properties.gest_praia){
   	case 1 : return 'Sim' ;

@@ -12,16 +12,6 @@ var latinamerica = $.ajax({
   }
 });
 
-// Malvinas
-var falklands = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/malvinas.geojson",
-  dataType: "json",
-  success: console.log("Falklands data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
 // Zonas Econômicas Exclusivas
 var eez = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/LatinAmericaData/master/EEZ.geojson",
@@ -69,26 +59,6 @@ var extensao = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/extensao_pc.geojson",
   dataType: "json",
   success: console.log("CP Extension data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
-// Linha de Costa
-var linhaCosta =$.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/ibge/linha_costa_1.geojson",
-  dataType: "json",
-  success: console.log("Linha de Costa data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }
-});
-
-// Unidades da Federação
-var ufs = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/unidades_federacao.geojson",
-  dataType: "json",
-  success: console.log("Brazilian boundaries data successfully loaded."),
   error: function (xhr) {
     alert(xhr.statusText);
   }
@@ -258,21 +228,13 @@ var ranchos_pesca = $.ajax({
   }
 });  
 
-var teste = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/teste.geojson",
-  dataType: "json",
-  success: console.log("test data successfully loaded."),
-  error: function (xhr) {
-    alert(xhr.statusText);
-  }  
-});
 
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
-$.when(latinamerica, falklands, eez, extensao, cz, ts, iw, linhaCosta, ufs, uc, 
-municipios, portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, 
-transporte_aquaviario, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
-LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
+$.when(latinamerica, eez, extensao, cz, ts, iw, uc, municipios, portos, 
+  aeroportos, cessoes, ocupacoes, certdisp, autobras, transporte_aquaviario, 
+  polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
+  LPM_HOMOLOGADA, LPM_PRESUMIDA).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -326,12 +288,26 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
      attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC'
   });
   
+  var Esri_WorldShadedRelief = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}', {
+	  attribution: 'Tiles &copy; Esri &mdash; Source: Esri',
+	  maxZoom: 13
+  });
+  
   var stamenTerrain = L.tileLayer(
     'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
     subdomains: 'abcd',
 	  minZoom: 0,
 	  maxZoom: 18,
 	  ext: 'png'
+  });
+  
+  var stamenWatercolor = L.tileLayer(
+    'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+	    subdomains: 'abcd',
+    	minZoom: 1,
+	    maxZoom: 16,
+	    ext: 'jpg'
   });
   
   var Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
@@ -398,15 +374,64 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
     }
   ).addTo(map);
   
+  // Camadas WFS do IBGE
+
+  var zonasMaritimasBrasil = null;
+  
+  var zonasmaritimasbrasil = $.ajax({
+      url : ibge('CCAR:BCIM_Outros_Limites_Oficiais_L'),
+      dataType : 'json',
+      jsonpCallback : 'getJson',
+      success: function (response) {
+          zonasMaritimasBrasil = L.geoJson(response, {
+              style: function (feature) {
+                  return {
+                    weight: 2,
+                    opacity: 1,
+                    color: 'LightGray',
+                    dashArray: '3',
+                  };
+              }
+          }).addTo(map);
+      }
+  });
+  
   // Camadas WMS do IBGE
   
   var options = {'format': 'image/png', 'transparent': true, 'opacity': 0.5, 
   'info_format': 'text/html'};
+  
   var source = L.WMS.source("https://geoservicos.ibge.gov.br/geoserver/ows", options);
+  
+  var UF_2013 = source.getLayer('CGEO:UF_2013').addTo(map);
   var UC_Estaduais = source.getLayer('CGEO:AtlasMar_UC_Estaduais');
   var UC_Federais = source.getLayer('CGEO:AtlasMar_UC_Federais');
   var UProtIntegral = source.getLayer('CGEO:IDS_17_Uni_de_Conserv_Protecao_Int_2_2');
-  var LinhaCosta = source.getLayer('CGEO:AtlasMar_Linhadecosta');
+  var LinhaCosta = source.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
+  
+  // Camadas WMS da ANA
+  
+  var sourceANA = L.WMS.source("http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer", options);
+  
+  var Bacias = sourceANA.getLayer('143');
+  
+  // Camadas WMS do MP
+  
+  var sourceMP = L.WMS.source("https://geoservicos.inde.gov.br/geoserver/MPOG/ows", options);
+  
+  var marinhaMercante = sourceMP.getLayer('Marinha_Mercante');
+  
+  var airports = sourceMP.getLayer('cosiplan_aeroportos1');
+  
+  // Camadas WMS do ICA
+  
+  var sourceICA = L.WMS.source("http://geoaisweb.decea.gov.br/geoserver/ICA/ows", options);
+  
+  var REAFLN = sourceICA.getLayer('REA_FLORIANOPOLIS', {
+    'format': 'image/png', 
+    'transparent': true, 
+    'opacity': 0.8
+  });
   
   /*
   var UCs = L.WMS.tileLayer("https://geoservicos.ibge.gov.br/geoserver/ows", {
@@ -445,43 +470,6 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
         permanent: false
       });
     }
-  });
-  
-  var FALKLANDS = L.geoJSON(falklands.responseJSON, {
-    snapIgnore : true,
-    style: {
-      color: '#133863',
-      weight: 2,
-      fillOpacity: 0.25
-    },
-    onEachFeature: function( feature, layer ){
-                   layer.bindPopup(
-                     "<b>Descrição: </b>" + "Malvinas" + "<br>" +
-                     "<b>Fonte: </b>" + "<a href= http://www.marineregions.org/gazetteer.php?p=details&id=47625 target='_blank'>Link.</a>" + "<br>" +
-                     "<b>Área (km &#178; ): " + "<br>" +
-                     "<b>Obs.: </b>"
-                     );
-      }
-    }
-  ).addTo(map);
-  
-  var UF = L.Proj.geoJson(ufs.responseJSON, {
-    snapIgnore : true,
-    style: {
-      color: '#f1f4c7',
-      weight: 2,
-      fillOpacity: 0.25
-    },
-      onEachFeature: function( feature, layer ){
-        layer.bindPopup(
-          "<b>Estado: </b>" + feature.properties.NM_ESTADO + "<br>" +
-          "<b>Região: </b>" + feature.properties.NM_REGIAO + "<br>" +
-          "<b>Código: </b>" + feature.properties.CD_GEOCUF
-        );
-        layer.bindTooltip(feature.properties.NM_ESTADO,{
-          permanent: false
-        });
-      }
   });
   
   var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
@@ -533,7 +521,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
                      );
       }
     }
-  );
+  ).addTo(map);
   
   var CZ = L.geoJSON(cz.responseJSON, {
     snapIgnore : true,
@@ -568,7 +556,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
                      );
       }
     }
-  ).addTo(map);
+  );
 
   var IW = L.geoJSON(iw.responseJSON, {
     snapIgnore : true,
@@ -586,16 +574,6 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
                        );
         }
       }
-  );
-  
-  var LINHACOSTA = L.geoJSON(linhaCosta.responseJSON, {
-    snapIgnore : true,
-    style:{
-      color: 'brown',
-      weight: 3,
-      fillOpacity: 0.5
-    }
-  }
   );
 
   /*  
@@ -1025,7 +1003,7 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
       "SIG-SC": wmsLayer,
       "OpenTopo": OpenTopoMap,
       "Esri World Imagery": Esri_WorldImagery,
-      "World Street Map": WSM,
+      "World Street Map": WSM
       };
 
   var groupedOverlays = {
@@ -1054,30 +1032,40 @@ LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, teste).done(function() {
     },
     "Limites territoriais":{
       "América Latina": LatinAmerica,
-      "Estados BR": UF,
-      "Municípios SC": MUNICIPIOS,
+      "Municípios SC": MUNICIPIOS
+    },
+    "Zonas Marítimas": {
       "Águas Internas": IW,
       "Mar Territorial (12MN)": TS,
       "Zona Contígua (24MN)": CZ,
       "Zona Econômica Exclusiva (200MN)": EEZ,
       "Extensão da PC": EXTENSAO
     },
-    "Meio Ambiente": {
-//      "Linha de Costa": LINHACOSTA,
-      "Linha de Costa (IBGE)": LinhaCosta,
+    "IBGE": {
+      "Unidades da Federação": UF_2013,
+      "Linha de Costa": LinhaCosta,
 //    "Linha de Costa (Buffer)": LCbuff,
       "Unidades de Conservação": UC,
 //      "Unidades de Conservação (IBGE)": UCs
       "Unidades de Conservação Estaduais": UC_Estaduais,
       "Unidades de Conservação Federais": UC_Federais,
       "Unidedades de Conservação de Proteção Integral": UProtIntegral
+    },
+    "ANA": {
+      "Bacias Hidrográficas": Bacias
+    },
+    "MP": {
+      "Marinha Mercante": marinhaMercante,
+      "Aeroportos": airports
+    },
+    "ICA": {
+      "REA Florianópolis": REAFLN
     }
   };
   
   var basemaps = [
-    wmsLayer, Esri_OceanBasemap, Esri_WorldImagery, Esri_NatGeoWorldMap, 
-    OpenStreetMap_Mapnik, OpenTopoMap
-    
+    wmsLayer, Esri_WorldShadedRelief, Esri_OceanBasemap, Esri_WorldImagery, 
+    Esri_NatGeoWorldMap, OpenStreetMap_Mapnik, OpenTopoMap, stamenWatercolor
     ]
   
   map.addControl(L.control.basemaps({
