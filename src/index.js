@@ -241,9 +241,8 @@ var ranchos_pesca = $.ajax({
 
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
-$.when(latinamerica, eez, extensao, cz, ts, iw, uc, sinau, municipios, portos, 
-  aeroportos, cessoes, ocupacoes, certdisp, autobras, transporte_aquaviario, 
-  polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
+$.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao, 
+  LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
   LPM_HOMOLOGADA, LPM_PRESUMIDA).done(function() {
   
   var WSM = L.tileLayer(
@@ -325,7 +324,7 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, sinau, municipios, portos,
 	maxZoom: 16
 });
   
-  var mappos = L.Permalink.getMapLocation(zoom= 7, center = [-27.7000, -50.5000]);
+  var mappos = L.Permalink.getMapLocation(zoom= 8, center = [-27.5000, -50.5000]);
   
   var map = L.map('map', {
       center: mappos.center,
@@ -408,37 +407,47 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, sinau, municipios, portos,
   
   // Camadas WMS do IBGE
   
-  var options = {'format': 'image/png', 'transparent': true, 'opacity': 0.5, 
-  'info_format': 'text/html'};
+  var options = {
+    'format': 'image/png', 
+    'transparent': true, 
+    'opacity': 0.5,
+    'info_format': 'text/html'
+  };
   
-  var source = L.WMS.source("https://geoservicos.ibge.gov.br/geoserver/ows", options);
+  var IBGE = L.WMS.source("https://geoservicos.ibge.gov.br/geoserver/ows", options);
   
-  var UF_2013 = source.getLayer('CGEO:UF_2013').addTo(map);
-  var UC_Estaduais = source.getLayer('CGEO:AtlasMar_UC_Estaduais');
-  var UC_Federais = source.getLayer('CGEO:AtlasMar_UC_Federais');
-  var UProtIntegral = source.getLayer('CGEO:IDS_17_Uni_de_Conserv_Protecao_Int_2_2');
-  var LinhaCosta = source.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
-  var faixaFronteira = source.getLayer('CGEO:ANMS2010_02_faixafronteira');
+  var UF_2013 = IBGE.getLayer('CGEO:UF_2013').addTo(map);
+  var INDIOS = IBGE.getLayer('CCAR:BCIM_Terra_Indigena_A');
+  var UC_Estaduais = IBGE.getLayer('CGEO:AtlasMar_UC_Estaduais');
+  var UC_Federais = IBGE.getLayer('CGEO:AtlasMar_UC_Federais');
+  var UProtIntegral = IBGE.getLayer('CGEO:IDS_17_Uni_de_Conserv_Protecao_Int_2_2');
+  var LinhaCosta = IBGE.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
+  var faixaFronteira = IBGE.getLayer('CGEO:ANMS2010_02_faixafronteira');
+  var potencialidadeMineral = IBGE.getLayer('CGEO:AtlasMar_RecursosMinerais_polygon');
+  var plataformasPetroleo = IBGE.getLayer('CGEO:LE2015_18_plataformas_petroleo');
+  var batimetriaFlorianopolis = IBGE.getLayer('CGEO:AtlasMar_Batimetria_Florianopolis');
+  var curvaBatimetrica = IBGE.getLayer('CCAR:BCIM_Curva_Batimetrica_L');
+  var pontoCotado = IBGE.getLayer('CCAR:BCIM_Ponto_Cotado_Batimetrico_P');
   
   // Camadas WMS da ANA
   
-  var sourceANA = L.WMS.source("http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer", options);
+  var ANA = L.WMS.source("http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer", options);
   
-  var Bacias = sourceANA.getLayer('143');
+  var Bacias = ANA.getLayer('143');
   
   // Camadas WMS do MP
   
-  var sourceMP = L.WMS.source("https://geoservicos.inde.gov.br/geoserver/MPOG/ows", options);
+  var MP = L.WMS.source("https://geoservicos.inde.gov.br/geoserver/MPOG/ows", options);
   
-  var marinhaMercante = sourceMP.getLayer('Marinha_Mercante');
+  var marinhaMercante = MP.getLayer('Marinha_Mercante');
   
-  var airports = sourceMP.getLayer('cosiplan_aeroportos1');
+  var airports = MP.getLayer('cosiplan_aeroportos1');
   
   // Camadas WMS do ICA
   
-  var sourceICA = L.WMS.source("http://geoaisweb.decea.gov.br/geoserver/ICA/ows", options);
+  var ICA = L.WMS.source("http://geoaisweb.decea.gov.br/geoserver/ICA/ows", options);
   
-  var REAFLN = sourceICA.getLayer('REA_FLORIANOPOLIS', {
+  var REAFLN = ICA.getLayer('REA_FLORIANOPOLIS', {
     'format': 'image/png', 
     'transparent': true, 
     'opacity': 1
@@ -1067,15 +1076,23 @@ $.when(latinamerica, eez, extensao, cz, ts, iw, uc, sinau, municipios, portos,
       "Extensão da PC": EXTENSAO
     },
     "IBGE": {
-      "Faixa de Fronteira": faixaFronteira,
       "Unidades da Federação": UF_2013,
+      "Plataformas de Petróleo": plataformasPetroleo,
+      "Potencialidade Mineral": potencialidadeMineral,
       "Linha de Costa": LinhaCosta,
 //    "Linha de Costa (Buffer)": LCbuff,
+      "Faixa de Fronteira": faixaFronteira,
+      "Territórios Indígenas": INDIOS,
       "Unidades de Conservação": UC,
 //      "Unidades de Conservação (IBGE)": UCs
       "Unidades de Conservação Estaduais": UC_Estaduais,
       "Unidades de Conservação Federais": UC_Federais,
       "Unidedades de Conservação de Proteção Integral": UProtIntegral
+    },
+    "Batimetria": {
+      "Florianópolis": batimetriaFlorianopolis,
+      "Curva batimétrica": curvaBatimetrica,
+      "Pontos Cotados": pontoCotado
     },
     "ANA": {
       "Bacias Hidrográficas": Bacias
