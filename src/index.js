@@ -1087,9 +1087,9 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao,
 //      "Unidades de Conservação (IBGE)": UCs
       "Unidades de Conservação Estaduais": UC_Estaduais,
       "Unidades de Conservação Federais": UC_Federais,
-      "Unidedades de Conservação de Proteção Integral": UProtIntegral
+      "Unidades de Conservação de Proteção Integral": UProtIntegral
     },
-    "Batimetria": {
+    "Batimetria (IBGE)": {
       "Florianópolis": batimetriaFlorianopolis,
       "Curva batimétrica": curvaBatimetrica,
       "Pontos Cotados": pontoCotado
