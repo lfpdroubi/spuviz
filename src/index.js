@@ -154,6 +154,15 @@ var autobras = $.ajax({
   }
 });
 
+var entregas = $.ajax({
+  url: "https://raw.githubusercontent.com/lfpdroubi/SPUData/master/entregas.geojson",
+  dataType: "json",
+  success: console.log("entregas data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+})
+
 // Linhas
 
 
@@ -241,8 +250,8 @@ var ranchos_pesca = $.ajax({
 
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
-$.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao, 
-  LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
+$.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
+  polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
   LPM_HOMOLOGADA, LPM_PRESUMIDA).done(function() {
   
   var WSM = L.tileLayer(
@@ -347,13 +356,15 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao,
           "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
           "<b>NUP: </b>" + feature.properties.nup + "<br>" +
           "<b>Perímetro: </b>" + turf.length(feature, {units: 'meters'}).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<br>" +
-          "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
-          "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<sup>2</sup><br>" +
-          "<b>Área Total (turf): </b>" + turf.area(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
-          "<b>Área União (turf): </b>" + areaUniao(feature).toLocaleString('de-DE', { maximumFractionDigits: 2 })  + " m<sup>2</sup><br>" +
+          "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2}) + " m<sup>2</sup><br>" +
+          "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2}) + " m<sup>2</sup><br>" +
+          "<b>Município: </b>" + feature.properties.municipio + "<br>" +
+          "<b>Logradouro-Trecho: </b>" + feature.properties.logradouro + "<br>" +
+          "<b>Avaliação: </b>" + feature.properties.aval + "<br>" +
+          "<b>Data da Avaliação: </b>" + feature.properties.dataaval + "<br>" +
           "<b>Data Início: </b>" + feature.properties.inicio + "<br>" +
           "<b>Data Vigência: </b>" + feature.properties.vigencia + "<br>" +
-          "<b>Centróide: </b>" + turf.getCoord(turf.centroid(feature)).toLocaleString('de-DE', { maximumFractionDigits: 4 })
+          "<b>Centróide: </b>" + turf.getCoord(turf.centroid(feature)).toLocaleString('de-DE', { maximumFractionDigits: 4})
           
           );
 			}
@@ -416,18 +427,33 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao,
   
   var IBGE = L.WMS.source("https://geoservicos.ibge.gov.br/geoserver/ows", options);
   
+  // Demarcação
   var UF_2013 = IBGE.getLayer('CGEO:UF_2013').addTo(map);
+  var LinhaCosta = IBGE.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
+  var faixaFronteira = IBGE.getLayer('CGEO:ANMS2010_02_faixafronteira');
+  var massaDagua = IBGE.getLayer('CCAR:BC250_2019_Massa_Dagua_A');
   var INDIOS = IBGE.getLayer('CCAR:BCIM_Terra_Indigena_A');
+  
+  // batimetria
+  var batimetriaFlorianopolis = IBGE.getLayer('CGEO:AtlasMar_Batimetria_Florianopolis');
+  var curvaBatimetrica = IBGE.getLayer('CCAR:BCIM_Curva_Batimetrica_L');
+  var pontoCotado = IBGE.getLayer('CCAR:BCIM_Ponto_Cotado_Batimetrico_P');  
+  
+  // Meio Ambiente
   var UC_Estaduais = IBGE.getLayer('CGEO:AtlasMar_UC_Estaduais');
   var UC_Federais = IBGE.getLayer('CGEO:AtlasMar_UC_Federais');
   var UProtIntegral = IBGE.getLayer('CGEO:IDS_17_Uni_de_Conserv_Protecao_Int_2_2');
-  var LinhaCosta = IBGE.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
-  var faixaFronteira = IBGE.getLayer('CGEO:ANMS2010_02_faixafronteira');
+
+  // Minérios
   var potencialidadeMineral = IBGE.getLayer('CGEO:AtlasMar_RecursosMinerais_polygon');
-  var plataformasPetroleo = IBGE.getLayer('CGEO:LE2015_18_plataformas_petroleo');
-  var batimetriaFlorianopolis = IBGE.getLayer('CGEO:AtlasMar_Batimetria_Florianopolis');
-  var curvaBatimetrica = IBGE.getLayer('CCAR:BCIM_Curva_Batimetrica_L');
-  var pontoCotado = IBGE.getLayer('CCAR:BCIM_Ponto_Cotado_Batimetrico_P');
+  var PreSal = IBGE.getLayer('CGEO:AtlasMar_AreaPreSal');
+  var plataformasPetroleo = IBGE.getLayer('CGEO:LE2015_17_plataformas_petroleo');
+  var Blocos = IBGE.getLayer('CGEO:AtlasMar_BlocosExploratorios');
+  var Campos = IBGE.getLayer('CGEO:LE2015_00_campos_petroleo_gas');
+  var baciasSedimentares = IBGE.getLayer('CGEO:AtlasMar_BaciasSedimentaresOceanicas');
+
+//  var GASBOL = IBGE.getLayer('CGEO:C02_gasoduto');
+  var Dutos = IBGE.getLayer('CGEO:ANMS2010_06_dutospetroleogas2009');
   
   // Camadas WMS da ANA
   
@@ -734,7 +760,8 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao,
 		L.geoJson(certdisp.responseJSON, geojsonOpts),
 		L.geoJson(cessoes.responseJSON, geojsonOpts),
 		L.geoJson(ocupacoes.responseJSON, geojsonOpts),
-		L.geoJson(autobras.responseJSON, geojsonOpts)
+		L.geoJson(autobras.responseJSON, geojsonOpts),
+		L.geoJson(entregas.responseJSON, geojsonOpts)
 	]
 	).addTo(map);
 	
@@ -1063,6 +1090,13 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao,
       "Portos": Portos,
       "Aeroportos": Aeroportos,
       "Transporte Marítimo": Balsas
+    }, 
+    "Óleo e Gás": {
+      "Área do Pré-Sal": PreSal,
+      "Blocos Exploratórios": Blocos,
+      "Campos de Exploração": Campos,
+      "Plataformas de Petróleo": plataformasPetroleo,
+      "Dutos": Dutos
     },
     "Limites territoriais":{
       "América Latina": LatinAmerica,
@@ -1077,8 +1111,9 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, polUniao,
     },
     "IBGE": {
       "Unidades da Federação": UF_2013,
-      "Plataformas de Petróleo": plataformasPetroleo,
+      "Massa Dágua": massaDagua,
       "Potencialidade Mineral": potencialidadeMineral,
+      "Bacias Sedimentares Oceânicas": baciasSedimentares,
       "Linha de Costa": LinhaCosta,
 //    "Linha de Costa (Buffer)": LCbuff,
       "Faixa de Fronteira": faixaFronteira,
