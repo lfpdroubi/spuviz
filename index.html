@@ -79,23 +79,23 @@
 
     <style type="text/css">
       body {
-            padding: 0;
-            margin: 0;
+        padding: 0;
+        margin: 0;
       }
       
      html, body, #map {
-         height: 100%;
-         font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+        height: 100%;
+        font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
      }
 
-     .negrito {
-         font-weight: bold;
+      .negrito {
+        font-weight: bold;
      }
      
       .lorem {
-          font-style: italic;
-          text-align: justify;
-          color: #AAA;
+        font-style: italic;
+        text-align: justify;
+        color: #AAA;
       }
         
       .icon {
@@ -103,23 +103,18 @@
         max-height: 70%;
         margin: 4px;
       }
-      #delete, #export {
+      #export {
         position: absolute;
-        top:220px;
-        right:10px;
+        top:450px;
+        left:60px;
         z-index:9999;
         background:white;
         color:black;
-        padding:6px;
-        border-radius:4px;
-        font-family: 'Helvetica Neue';
-        cursor: pointer;
-        font-size:12px;
-        text-decoration:none;
+        max-width: 100%;
+        max-height: 100%;
+        margin:4px;
+        font-size:18px;
         }
-      #export {
-        top: 250px;
-      }
 
     </style>
 
@@ -140,7 +135,7 @@
 
             <!-- bottom aligned tabs -->
             <ul role="tablist">
-                <li><a href="https://github.com/nickpeihl/leaflet-sidebar-v2"><i class="fa fa-github"></i></a></li>
+                <li><a href="https://github.com/lfpdroubi/SPUViz"><i class="fa fa-github"></i></a></li>
             </ul>
         </div>
 
@@ -148,11 +143,11 @@
         <div class="leaflet-sidebar-content">
             <div class="leaflet-sidebar-pane" id="home">
                 <h1 class="leaflet-sidebar-header">
-                    sidebar-v2
+                    SPUViz
                     <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 
-                <p>A responsive sidebar for the mapping library <a href="https://leafletjs.com/">Leaflet</a>.</p>
+                <p>Um visualizador de dados espaciais para a  gestão do <a href="http://www.patrimoniodetodos.gov.br/#/">Patrimônio da União</a>.</p>
                 <p>Compatible with version 0.7 and 1.x (tested up to 1.6.0)</p>
                 <p><b>Select the other panes for a showcase of each feature.</b></p>
 
@@ -196,8 +191,9 @@
     <!-- MAP SCRIPT -->
     <script src="src/index.js"></script>
     <script src="src/helpers.js"></script>
-    <div id='delete'>Delete Features</div>
-    <a href='#' id='export'>Export Features</a>
+    <a href='#' id='export'>
+      <img alt="save icon" src="save.svg" width="20" height="20">
+    </a>
   </body>
 
 </html>

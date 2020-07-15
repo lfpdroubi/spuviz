@@ -1255,12 +1255,13 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       featureGroup.addLayer(e.layer);
   });
 
-  
+  /*
   // on click, clear all layers
   document.getElementById('delete').onclick = function(e) {
     featureGroup.clearLayers();
   }
-
+  */
+  
   document.getElementById('export').onclick = function(e) {
     // Extract GeoJson from featureGroup
     var data = featureGroup.toGeoJSON();
