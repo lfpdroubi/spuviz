@@ -24,6 +24,18 @@ var eez = $.ajax({
 
 // BRASIL DATA
 
+// WFS Server IBGE
+
+var zonasmaritimasbrasil = $.ajax({
+  url : ibge('CCAR:BCIM_Outros_Limites_Oficiais_L'),
+  dataType : 'json',
+  jsonpCallback : 'getJson',
+  success: console.log("zonamaritimasbrasil data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
 // Zona Contígua
 var cz = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/CZ.geojson",
@@ -161,7 +173,7 @@ var entregas = $.ajax({
   error: function (xhr) {
     alert(xhr.statusText);
   }
-})
+});
 
 // Linhas
 
@@ -394,38 +406,18 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     }
   ).addTo(map);
   
-  // Camadas WFS do IBGE
-
-  var zonasMaritimasBrasil = null;
-  
-  var zonasmaritimasbrasil = $.ajax({
-      url : ibge('CCAR:BCIM_Outros_Limites_Oficiais_L'),
-      dataType : 'json',
-      jsonpCallback : 'getJson',
-      success: function (response) {
-          zonasMaritimasBrasil = L.geoJson(response, {
-              style: function (feature) {
-                  return {
-                    weight: 2,
-                    opacity: 1,
-                    color: 'LightGray',
-                    dashArray: '3',
-                  };
-              }
-          }).addTo(map);
+  var zonasMaritimasBrasil = L.geoJson(zonasmaritimasbrasil.responseJSON, {
+      style: function (feature) {
+        return {
+          weight: 2,
+          opacity: 1,
+          color: 'LightGray',
+          dashArray: '3',
+        };
       }
-  });
+  }).addTo(map);
   
   // Camadas WMS do IBGE
-  
-  var options = {
-    'format': 'image/png', 
-    'transparent': true, 
-    'opacity': 0.5,
-    'info_format': 'text/html'
-  };
-  
-  var IBGE = L.WMS.source("https://geoservicos.ibge.gov.br/geoserver/ows", options);
   
   // Demarcação
   var UF_2013 = IBGE.getLayer('CGEO:UF_2013').addTo(map);
@@ -457,21 +449,15 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   
   // Camadas WMS da ANA
   
-  var ANA = L.WMS.source("http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer", options);
-  
   var Bacias = ANA.getLayer('143');
   
   // Camadas WMS do MP
-  
-  var MP = L.WMS.source("https://geoservicos.inde.gov.br/geoserver/MPOG/ows", options);
   
   var marinhaMercante = MP.getLayer('Marinha_Mercante');
   
   var airports = MP.getLayer('cosiplan_aeroportos1');
   
   // Camadas WMS do ICA
-  
-  var ICA = L.WMS.source("http://geoaisweb.decea.gov.br/geoserver/ICA/ows", options);
   
   var REAFLN = ICA.getLayer('REA_FLORIANOPOLIS', {
     'format': 'image/png', 

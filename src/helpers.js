@@ -1,3 +1,15 @@
+var options = {
+  'format': 'image/png', 
+  'transparent': true, 
+  'opacity': 0.5,
+  'info_format': 'text/html'
+};
+
+var IBGE = L.WMS.source("https://geoservicos.ibge.gov.br/geoserver/ows", options);
+var ANA = L.WMS.source("http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer", options);
+var MP = L.WMS.source("https://geoservicos.inde.gov.br/geoserver/MPOG/ows", options);
+var ICA = L.WMS.source("http://geoaisweb.decea.gov.br/geoserver/ICA/ows", options);
+
 function ibge(name){
   
   var owsrootUrl = 'https://geoservicos.ibge.gov.br/geoserver/ows';
