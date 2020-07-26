@@ -408,9 +408,68 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     }
   ).addTo(map);
   
-  //Camadas WFS do IBGE
+  // Adds Territorial Limits layers
   
-  const wfsIBGEoptions = {
+    proj4.defs('EPSG:31982', '+proj=utm +zone=22 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ');
+
+  // Adds SIRGAS2000 GeoJSON
+  var LatinAmerica = L.geoJSON(latinamerica.responseJSON, {
+    snapIgnore : true,
+    style: function(feature) {
+      return{
+        fillOpacity: 0.25,
+        color: feature.COLORMAP,
+        weight: 0.75
+      };
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Nome: </b>" + feature.properties.LOCLNGNAM + "<br>" +
+        "<b>Status: </b>" + feature.properties.STATUS + "<br>" +
+        "<b>Área: </b>" + feature.properties.SQKM.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " km &#178; <br>" +
+        "<b>População (2019): </b>" + feature.properties.POP_CNTRY.toLocaleString('de-DE', { maximumFractionDigits: 0 })
+        );
+      layer.bindTooltip(feature.properties.LOCSHRTNAM,{
+        permanent: false
+      });
+    }
+  });
+  
+  var UF_2013 = new L.WFS({
+    crs: L.CRS.EPSG4326,
+    filter: new L.Filter.NotEQ('nomuf', 'Santa Catarina'),
+    geometryField: 'geom',
+    url: `https://geoservicos.ibge.gov.br/geoserver/ows`,
+    typeNS: 'CGEO',
+    typeName: 'UF_2013',
+    opacity: 1,
+    style: function(layer) {
+      return {
+        color:  'LightGray',
+        weight: 2,
+        opacity: 1
+      };
+    }
+  }).addTo(map);
+  
+  var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
+    snapIgnore : true,
+    style: areaStyle,
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Município: </b>" + feature.properties.nome + "<br>" +
+        "<b>Geocodigo: </b>" + feature.properties.geocodigo + "<br>" +
+        "<b>Gestão de Praias: </b>" + gestaoPraiaStatus(feature)  + "<br>" +
+        "<b>NUP: </b>" + "<a href=" + feature.properties.nup_gpraia + ">Link para portaria.</a>"
+        );
+      layer.bindTooltip(feature.properties.nome,{
+        permanent: false
+      });
+    }
+  });
+
+
+  var zonasMaritimasBrasil = new L.WFS({
     crs: L.CRS.EPSG4326,
     showExisting: true,
     geometryField: 'geom',
@@ -425,32 +484,38 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
         opacity: 1,
         dashArray: 3
       };
-    },
-  };
-  
-  var zonasMaritimasBrasil = new L.WFS(wfsIBGEoptions, new L.Format.GeoJSON({
-    crs: L.CRS.EPSG4326,
-    onEachFeature: function( feature, layer ){
-      layer.bindPopup(
-        "<b>Nome: </b>" + feature.properties.nome + "<br>" +
-        "<b>Tipo: </b>" + feature.properties.tipooutlimofic
-        );
     }
-  }));
-  
-  zonasMaritimasBrasil.addTo(map);
-  
-  /*
+  }).addTo(map);
   
   var popup = new L.Popup();
   
   zonasMaritimasBrasil.on('click', function (e) {
     popup
       .setLatLng(e.latlng)
-      .setContent('You clicked at '+ e.layer.feature.id)
+      .setContent(e.layer.feature.properties.nome)
       .openOn(map);
   });
-  */
+  
+  zonasMaritimasBrasil.bindTooltip("Limites Zonas Marítimas", {
+    sticky: true // If true, the tooltip will follow the mouse instead of being fixed at the feature center.
+  }).addTo(map);
+  
+  var linhaCosta = new L.WFS({
+    crs: L.CRS.EPSG4326,
+    showExisting: true,
+    geometryField: 'geom',
+    url: `https://geoservicos.ibge.gov.br/geoserver/ows`,
+    typeNS: 'CGEO',
+    typeName: 'AtlasMar_LinhadeCosta',
+    opacity: 1,
+    style: function(layer) {
+      return {
+        color:  'RoyalBlue',
+        weight: 1,
+        opacity: 1
+      };
+    }
+  }).addTo(map);
   
   /*
   var zonasMaritimasBrasil = L.geoJson(zonasmaritimasbrasil.responseJSON, {
@@ -468,8 +533,8 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   // Camadas WMS do IBGE
   
   // Demarcação
-  var UF_2013 = IBGE.getLayer('CGEO:UF_2013').addTo(map);
-  var LinhaCosta = IBGE.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
+  // var UF_2013 = IBGE.getLayer('CGEO:UF_2013').addTo(map);
+  // var linhaCosta = IBGE.getLayer('CGEO:AtlasMar_Linhadecosta').addTo(map);
   var faixaFronteira = IBGE.getLayer('CGEO:ANMS2010_02_faixafronteira');
   var massaDagua = IBGE.getLayer('CCAR:BC250_2019_Massa_Dagua_A');
   var INDIOS = IBGE.getLayer('CCAR:BCIM_Terra_Indigena_A');
@@ -525,48 +590,6 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   });
   */
   
-  // Add requested external GeoJSON to map
-  
-  proj4.defs('EPSG:31982', '+proj=utm +zone=22 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ');
-
-  // Adds SIRGAS2000 GeoJSON
-  var LatinAmerica = L.geoJSON(latinamerica.responseJSON, {
-    snapIgnore : true,
-    style: function(feature) {
-      return{
-        fillOpacity: 0.25,
-        color: feature.COLORMAP,
-        weight: 0.75
-      };
-    },
-    onEachFeature: function( feature, layer ){
-      layer.bindPopup(
-        "<b>Nome: </b>" + feature.properties.LOCLNGNAM + "<br>" +
-        "<b>Status: </b>" + feature.properties.STATUS + "<br>" +
-        "<b>Área: </b>" + feature.properties.SQKM.toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " km &#178; <br>" +
-        "<b>População (2019): </b>" + feature.properties.POP_CNTRY.toLocaleString('de-DE', { maximumFractionDigits: 0 })
-        );
-      layer.bindTooltip(feature.properties.LOCSHRTNAM,{
-        permanent: false
-      });
-    }
-  });
-  
-  var MUNICIPIOS = L.geoJSON(municipios.responseJSON, {
-    snapIgnore : true,
-    style: areaStyle,
-    onEachFeature: function( feature, layer ){
-      layer.bindPopup(
-        "<b>Município: </b>" + feature.properties.nome + "<br>" +
-        "<b>Geocodigo: </b>" + feature.properties.geocodigo + "<br>" +
-        "<b>Gestão de Praias: </b>" + gestaoPraiaStatus(feature)  + "<br>" +
-        "<b>NUP: </b>" + "<a href=" + feature.properties.nup_gpraia + ">Link para portaria.</a>"
-        );
-      layer.bindTooltip(feature.properties.nome,{
-        permanent: false
-      });
-    }
-  });
 
   var EEZ = L.geoJSON(eez.responseJSON, {
     snapIgnore : true,
@@ -1148,7 +1171,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       "Massa Dágua": massaDagua,
       "Potencialidade Mineral": potencialidadeMineral,
       "Bacias Sedimentares Oceânicas": baciasSedimentares,
-      "Linha de Costa": LinhaCosta,
+      "Linha de Costa": linhaCosta,
 //    "Linha de Costa (Buffer)": LCbuff,
       "Faixa de Fronteira": faixaFronteira,
       "Territórios Indígenas": INDIOS,
