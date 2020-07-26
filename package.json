@@ -30,6 +30,7 @@
     "leaflet-minimap": "^3.6.1",
     "leaflet-search": "^2.9.8",
     "leaflet-textpath": "^1.2.3",
+    "leaflet-wfst": "^2.0.1-beta.25",
     "leaflet.browser.print": "^1.0.2",
     "leaflet.measurecontrol": "^1.1.0",
     "leaflet.mousecoordinate": "github:PowerPan/leaflet.mouseCoordinate",
