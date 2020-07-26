@@ -26,15 +26,17 @@ var eez = $.ajax({
 
 // WFS Server IBGE
 
+/*
 var zonasmaritimasbrasil = $.ajax({
   url : ibge('CCAR:BCIM_Outros_Limites_Oficiais_L'),
   dataType : 'json',
   jsonpCallback : 'getJson',
-  success: console.log("zonamaritimasbrasil data successfully loaded."),
+  success: console.log("zonasmaritimasbrasil data successfully loaded."),
   error: function (xhr) {
     alert(xhr.statusText);
   }
 });
+*/
 
 // Zona Contígua
 var cz = $.ajax({
@@ -406,6 +408,51 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     }
   ).addTo(map);
   
+  //Camadas WFS do IBGE
+  
+  const wfsIBGEoptions = {
+    crs: L.CRS.EPSG4326,
+    showExisting: true,
+    geometryField: 'geom',
+    url: `https://geoservicos.ibge.gov.br/geoserver/ows`,
+    typeNS: 'CCAR',
+    typeName: 'BCIM_Outros_Limites_Oficiais_L',
+    opacity: 1,
+    style: function(layer) {
+      return {
+        color:  'RoyalBlue',
+        weight: 1,
+        opacity: 1,
+        dashArray: 3
+      };
+    },
+  };
+  
+  var zonasMaritimasBrasil = new L.WFS(wfsIBGEoptions, new L.Format.GeoJSON({
+    crs: L.CRS.EPSG4326,
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Nome: </b>" + feature.properties.nome + "<br>" +
+        "<b>Tipo: </b>" + feature.properties.tipooutlimofic
+        );
+    }
+  }));
+  
+  zonasMaritimasBrasil.addTo(map);
+  
+  /*
+  
+  var popup = new L.Popup();
+  
+  zonasMaritimasBrasil.on('click', function (e) {
+    popup
+      .setLatLng(e.latlng)
+      .setContent('You clicked at '+ e.layer.feature.id)
+      .openOn(map);
+  });
+  */
+  
+  /*
   var zonasMaritimasBrasil = L.geoJson(zonasmaritimasbrasil.responseJSON, {
       style: function (feature) {
         return {
@@ -416,6 +463,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
         };
       }
   }).addTo(map);
+  */
   
   // Camadas WMS do IBGE
   
