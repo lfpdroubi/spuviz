@@ -460,8 +460,8 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
         "<b>Município: </b>" + feature.properties.nome + "<br>" +
         "<b>Geocodigo: </b>" + feature.properties.geocodigo + "<br>" +
         "<b>Gestão de Praias: </b>" + gestaoPraiaStatus(feature)  + "<br>" +
-        "<b>NUP: </b>" + "<a href=" + feature.properties.nup_gpraia + ">Link para portaria.</a>"
-        );
+        "<b>NUP: </b>" + feature.properties.nup_gpraia 
+      );
       layer.bindTooltip(feature.properties.nome,{
         permanent: false
       });
