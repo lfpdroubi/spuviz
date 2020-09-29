@@ -761,7 +761,8 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
                      "<b>Descrição: </b>" + feature.properties.descricao + "<br>" +
                      "<b>Portaria: </b>" + feature.properties.portaria + "<br>" +
                      "<b>Data: </b>" + feature.properties.data + "<br>" +
-                     "<b>Fonte: </b>" + "<a href=" + feature.properties.fonte + ">Link para portaria.</a>"
+                     "<b>Fonte: </b>" + "<a href=" + feature.properties.fonte + ">Link para portaria.</a>" + "<br>" +
+                     "<b>Observação: </b>" + feature.properties.obs
                      );
 
       }
