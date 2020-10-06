@@ -759,7 +759,10 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     onEachFeature: function( feature, layer ){
                    layer.bindPopup(
                      "<b>Descrição: </b>" + feature.properties.descricao + "<br>" +
+                     "<b>Área: </b>" + feature.properties.area + "<br>" +
+                     "<b>NUP: </b>" + feature.properties.nup + "<br>" +
                      "<b>Portaria: </b>" + feature.properties.portaria + "<br>" +
+                     "<b>Anexo: </b>" + feature.properties.anexo + "<br>" +
                      "<b>Data: </b>" + feature.properties.data + "<br>" +
                      "<b>Fonte: </b>" + "<a href=" + feature.properties.fonte + ">Link para portaria.</a>" + "<br>" +
                      "<b>Observação: </b>" + feature.properties.obs
