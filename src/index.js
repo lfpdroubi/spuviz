@@ -100,7 +100,7 @@ var portos = $.ajax({
 
 // Aeroportos
 var aeroportos = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/aeroportos.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/aeroportos.geojson",
   dataType: "json",
   success: console.log("Airports data successfully loaded."),
   error: function (xhr) {
@@ -120,7 +120,7 @@ var sinau = $.ajax({
 
 // SANTA CATARINA DATA
 var municipios = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/municipios.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/municipios.geojson",
   dataType: "json",
   success: console.log("municipios data successfully loaded."),
   error: function (xhr) {
@@ -133,7 +133,7 @@ var municipios = $.ajax({
 // Destinação
 
 var cessoes = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/cessoes.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/cessoes.geojson",
   dataType: "json",
   success: console.log("Cessions data successfully loaded."),
   error: function (xhr) {
@@ -142,7 +142,7 @@ var cessoes = $.ajax({
 });
 
 var ocupacoes = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/ocupacoes.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUPRIV/master/ocupacoes.geojson",
   dataType: "json",
   success: console.log("Ocupations data successfully loaded."),
   error: function (xhr) {
@@ -151,7 +151,7 @@ var ocupacoes = $.ajax({
 });
 
 var certdisp = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/certdisp.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/certdisp.geojson",
   dataType: "json",
   success: console.log("CertDisp data successfully loaded."),
   error: function (xhr) {
@@ -160,7 +160,7 @@ var certdisp = $.ajax({
 });
 
 var autobras = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/autobras.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/autobras.geojson",
   dataType: "json",
   success: console.log("autobras data successfully loaded."),
   error: function (xhr) {
@@ -169,7 +169,7 @@ var autobras = $.ajax({
 });
 
 var entregas = $.ajax({
-  url: "https://raw.githubusercontent.com/lfpdroubi/SPUData/master/entregas.geojson",
+  url: "https://raw.githubusercontent.com/geoSPU/SPUData/master/entregas.geojson",
   dataType: "json",
   success: console.log("entregas data successfully loaded."),
   error: function (xhr) {
@@ -181,7 +181,7 @@ var entregas = $.ajax({
 
 
 var polUniao = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/Poligonos_LPM_Homologada.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/Poligonos_LPM_Homologada.geojson",
   dataType: "json",
   success: console.log("Polígonos da União data successfully loaded."),
   error: function (xhr) {
@@ -190,7 +190,7 @@ var polUniao = $.ajax({
 });
 
 var LLTM_DEMARCADA = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LLTM_DEMARCADA.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/linhas/LLTM_DEMARCADA.geojson",
   dataType: "json",
   success: console.log("LLTM Demarcada data successfully loaded."),
   error: function (xhr) {
@@ -199,7 +199,7 @@ var LLTM_DEMARCADA = $.ajax({
 });
 
 var LLTM_HOMOLOGADA = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LLTM_HOMOLOGADA.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/linhas/LLTM_HOMOLOGADA.geojson",
   dataType: "json",
   success: console.log("LLTM Homologada data successfully loaded."),
   error: function (xhr) {
@@ -208,7 +208,7 @@ var LLTM_HOMOLOGADA = $.ajax({
 });
 
 var LLTM_PRESUMIDA = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LLTM_PRESUMIDA.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/linhas/LLTM_PRESUMIDA.geojson",
   dataType: "json",
   success: console.log("LLTM Presumida data successfully loaded."),
   error: function (xhr) {
@@ -217,7 +217,7 @@ var LLTM_PRESUMIDA = $.ajax({
 });
 
 var LPM_DEMARCADA = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LPM_DEMARCADA.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/linhas/LPM_DEMARCADA.geojson",
   dataType: "json",
   success: console.log("LPM Demarcada data successfully loaded."),
   error: function (xhr) {
@@ -226,7 +226,7 @@ var LPM_DEMARCADA = $.ajax({
 });
 
 var LPM_HOMOLOGADA = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LPM_HOMOLOGADA.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/linhas/LPM_HOMOLOGADA.geojson",
   dataType: "json",
   success: console.log("LPM Homologada data successfully loaded."),
   error: function (xhr) {
@@ -235,7 +235,7 @@ var LPM_HOMOLOGADA = $.ajax({
 });
 
 var LPM_PRESUMIDA = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/linhas/LPM_PRESUMIDA.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/linhas/LPM_PRESUMIDA.geojson",
   dataType: "json",
   success: console.log("LPM Presumida data successfully loaded."),
   error: function (xhr) {
@@ -244,7 +244,7 @@ var LPM_PRESUMIDA = $.ajax({
 });
 
 var transporte_aquaviario = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/transporte-aquaviario.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/transporte-aquaviario.geojson",
   dataType: "json",
   success: console.log("transporte_aquaviario data successfully loaded."),
   error: function (xhr) {
@@ -253,7 +253,7 @@ var transporte_aquaviario = $.ajax({
 });
 
 var ranchos_pesca = $.ajax({
-  url:"https://raw.githubusercontent.com/lfpdroubi/SPUData/master/ranchos_de_pesca.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/ranchos_de_pesca.geojson",
   dataType: "json",
   success: console.log("ranchos_de_pesca data successfully loaded."),
   error: function (xhr) {
@@ -1277,7 +1277,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   
   logo.onAdd = function(map){
     var div = L.DomUtil.create('div', 'logoContainer');
-    div.innerHTML= "<img src='https://raw.githubusercontent.com/lfpdroubi/SPUData/master/SPU.jpg' width='60' height='60' style='position: absolute; bottom: -5px; left: 0px; opacity:0.5;filter:alpha(opacity=50);' />";
+    div.innerHTML= "<img src='https://raw.githubusercontent.com/geoSPU/SPUData/master/SPU.jpg' width='60' height='60' style='position: absolute; bottom: -5px; left: 0px; opacity:0.5;filter:alpha(opacity=50);' />";
     return div;
   }
   
