@@ -298,6 +298,14 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       iconURL: 'sig-sc.png'
   });
 
+  var CBERS = L.tileLayer.wms(
+    'http://brazildatacube.dpi.inpe.br/bdc/geoserver/bdc_brmosaic/wms', {
+      maxNativeZoom: 19,
+      maxZoom: 100,
+      layers: 'cbers_full_resolution_tiles',
+      labels: 'CBERS'
+  });
+
   var Esri_WorldImagery = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       maxNativeZoom: 17,
@@ -345,7 +353,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   var Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
 	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
 	maxZoom: 16
-});
+  });
   
   var mappos = L.Permalink.getMapLocation(zoom= 8, center = [-27.5000, -50.5000]);
   
@@ -1122,6 +1130,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   );
     
   var baseLayers = {
+      "CBERS": CBERS,
       "SIG-SC": wmsLayer,
       "OpenTopo": OpenTopoMap,
       "Esri World Imagery": Esri_WorldImagery,
@@ -1208,7 +1217,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   var basemaps = [
     Esri_WorldImagery, Esri_WorldShadedRelief, Esri_OceanBasemap, 
     Esri_NatGeoWorldMap, OpenStreetMap_Mapnik, OpenTopoMap, stamenWatercolor, 
-    wmsLayer
+    wmsLayer, CBERS
     ]
   
   map.addControl(L.control.basemaps({
