@@ -1215,8 +1215,9 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   };
   
   var basemaps = [
-    wmsLayer, CBERS, Esri_WorldImagery, Esri_WorldShadedRelief, Esri_OceanBasemap, 
+    wmsLayer, Esri_WorldImagery, Esri_WorldShadedRelief, Esri_OceanBasemap, 
     Esri_NatGeoWorldMap, OpenStreetMap_Mapnik, OpenTopoMap, stamenWatercolor, 
+    CBERS
     ]
   
   map.addControl(L.control.basemaps({
