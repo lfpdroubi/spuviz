@@ -780,11 +780,22 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     }
   ).addTo(map);
   
+  const airportIcon = L.divIcon({
+    html: '<i class="fas fa-plane" style="color: magenta"></i>',
+    iconSize: [30, 30],
+    className: 'myDivIcon' // We don't want to use the default class
+  });
+  
   var Aeroportos = L.geoJSON(aeroportos.responseJSON,{
-                    onEachFeature: function(feature,layer){
+    pointToLayer: function(feature, latlng) {
+      if (feature.geometry.type === 'Point') {
+        return new L.marker(latlng, { icon: airportIcon });  
+      }
+      }, onEachFeature: function(feature,layer){
                         if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
                             console.log('Polygon detected');
-                            L.marker(turf.getCoord(turf.flip(turf.centroid(feature)))).addTo(map);
+                            L.marker(turf.getCoord(turf.flip(turf.centroid(feature))),
+                            {icon: airportIcon}).addTo(map);
                         }
                    layer.bindPopup(
                     "<b>ICAO: </b>" + feature.properties.ICAO + "<br>" +
@@ -1074,12 +1085,14 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     size:30
   });
   
+  /*
   var aeroporto = L.icon.mapkey({
     icon: 'airport',
     color:'#725139',
     background:'#f2c357',
     size:30
   });
+  */
   
   var marina = L.icon.mapkey({
     icon: 'marina',
