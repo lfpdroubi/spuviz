@@ -38,6 +38,16 @@ var zonasmaritimasbrasil = $.ajax({
 });
 */
 
+var linhadecosta = $.ajax({
+  url : ibge('CGEO:AtlasMar_Linhadecosta'),
+  dataType : 'json',
+  jsonpCallback : 'getJson',
+  success: console.log("Linha De Costa data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
 // Zona Contígua
 var cz = $.ajax({
   url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/CZ.geojson",
@@ -266,7 +276,7 @@ var ranchos_pesca = $.ajax({
 // Add the variable for each of your AJAX requests to $.when()
 $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
-  LPM_HOMOLOGADA, LPM_PRESUMIDA).done(function() {
+  LPM_HOMOLOGADA, LPM_PRESUMIDA, linhadecosta).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -508,13 +518,16 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     sticky: true // If true, the tooltip will follow the mouse instead of being fixed at the feature center.
   }).addTo(map);
   
+  // https://geoservicos.ibge.gov.br/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=CGEO:AtlasMar_Linhadecosta&outputFormat=application/json
+  
+  /*
   var linhaCosta = new L.WFS({
     crs: L.CRS.EPSG4326,
     showExisting: true,
-    geometryField: 'geom',
+    geometryField: 'shape',
     url: `https://geoservicos.ibge.gov.br/geoserver/ows`,
     typeNS: 'CGEO',
-    typeName: 'AtlasMar_LinhadeCosta',
+    typeName: 'AtlasMar_Linhadecosta',
     opacity: 1,
     style: function(layer) {
       return {
@@ -524,6 +537,31 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       };
     }
   }).addTo(map);
+  */
+  
+  var linhaCosta = L.geoJson(linhadecosta.responseJSON, {
+      style: function (feature) {
+        return {
+          weight: 2,
+          opacity: 1,
+          color: 'brown',
+          dashArray: '3',
+        };
+      }
+  }).addTo(map);
+
+  var oneHundredMetersOut = turf.buffer(linhadecosta.responseJSON, 200, { 
+    units: 'meters'
+  });
+  
+  var LCBuff =  L.geoJSON(oneHundredMetersOut, {
+    style:{
+      color: 'brown',
+      weight: 2,
+      fillOpacity: 0.25
+    }
+  }
+  );
   
   /*
   var zonasMaritimasBrasil = L.geoJson(zonasmaritimasbrasil.responseJSON, {
@@ -700,19 +738,6 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       )
     }
   });
-  
-  /*  
-  var oneHundredMetersOut = turf.buffer(linhaCosta.responseJSON, 100, { units: 'meters' });
-  
-  var LCbuff = L.geoJSON(oneHundredMetersOut, {
-    style:{
-      color: 'brown',
-      weight: 2,
-      fillOpacity: 0.25
-    }
-  }
-  );
-  */
   
   var POLUNIAO = L.geoJSON(polUniao.responseJSON, {
     style: {
@@ -1132,17 +1157,6 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     }
   });
   
-  var fiftyMetersOut = turf.buffer(ranchos_pesca.responseJSON, 50, { units: 'meters' });
-  
-  var TAUSbuff = L.geoJSON(fiftyMetersOut, {
-    style:{
-      color: 'brown',
-      weight: 2,
-      fillOpacity: 0.25
-    }
-  }
-  );
-    
   var baseLayers = {
       "CBERS": CBERS,
       "SIG-SC": wmsLayer,
@@ -1158,8 +1172,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
 //      "Ocupações": Ocupacoes,
 //      "Certidões de Disponibilidade": CertDisp,
 //      "Autorizações de Obras": AutObras,
-      "TAUS": Pesca,
-      "TAUS (Buffer)": TAUSbuff
+      "TAUS": Pesca
     },
     "Terrenos de Marinha": {
       "Polígonos da União": POLUNIAO,
@@ -1199,7 +1212,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       "Potencialidade Mineral": potencialidadeMineral,
       "Bacias Sedimentares Oceânicas": baciasSedimentares,
       "Linha de Costa": linhaCosta,
-//    "Linha de Costa (Buffer)": LCbuff,
+      "Linha de Costa (buffer 100m)": LCBuff,
       "Faixa de Fronteira": faixaFronteira,
       "Territórios Indígenas": INDIOS,
       "Unidades de Conservação": UC,
