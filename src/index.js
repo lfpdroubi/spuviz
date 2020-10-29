@@ -388,8 +388,8 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
           "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
           "<b>NUP: </b>" + feature.properties.nup + "<br>" +
           "<b>Perímetro: </b>" + turf.length(feature, {units: 'meters'}).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + " m<br>" +
-          "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2}) + " m<sup>2</sup><br>" +
-          "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2}) + " m<sup>2</sup><br>" +
+          "<b>Área Total: </b>" + feature.properties.area + " m<sup>2</sup><br>" +
+          "<b>Área União: </b>" + feature.properties.area_uniao + " m<sup>2</sup><br>" +
           "<b>Município: </b>" + feature.properties.municipio + "<br>" +
           "<b>Logradouro-Trecho: </b>" + feature.properties.logradouro + "-" +
           feature.properties.trecho+ "<br>" +
