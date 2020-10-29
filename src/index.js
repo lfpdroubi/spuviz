@@ -391,7 +391,8 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
           "<b>Área Total: </b>" + feature.properties.area.toLocaleString('de-DE', { maximumFractionDigits: 2}) + " m<sup>2</sup><br>" +
           "<b>Área União: </b>" + feature.properties.area_uniao.toLocaleString('de-DE', { maximumFractionDigits: 2}) + " m<sup>2</sup><br>" +
           "<b>Município: </b>" + feature.properties.municipio + "<br>" +
-          "<b>Logradouro-Trecho: </b>" + feature.properties.logradouro + "<br>" +
+          "<b>Logradouro-Trecho: </b>" + feature.properties.logradouro + "-" +
+          feature.properties.trecho+ "<br>" +
           "<b>Avaliação: </b>" + feature.properties.aval + "<br>" +
           "<b>Data da Avaliação: </b>" + feature.properties.dataaval + "<br>" +
           "<b>Data Início: </b>" + feature.properties.inicio + "<br>" +
