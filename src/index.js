@@ -1153,9 +1153,17 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   
   // Append to marker:
   var Pesca = L.geoJSON(ranchos_pesca.responseJSON, {
-    pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {icon:pesca});
-    }
+    pointToLayer: function(feature, latlng) {
+      if (feature.geometry.type === 'Point') {
+        return new L.marker(latlng, { icon: pesca });  
+      }
+      }, onEachFeature: function(feature,layer){
+                        if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon') {
+                            console.log('Polygon detected');
+                            L.marker(turf.getCoord(turf.flip(turf.centroid(feature))),
+                            {icon: pesca}).addTo(map);
+                        }
+      }
   });
   
   var baseLayers = {
