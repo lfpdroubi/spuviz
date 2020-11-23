@@ -187,6 +187,15 @@ var entregas = $.ajax({
   }
 });
 
+var nujuc = $.ajax({
+  url: "https://raw.githubusercontent.com/geoSPU/SPU-SC-NUJUC/master/nujuc.geojson",
+  dataType: "json",
+  success: console.log("SPU-SC-NUJUC data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }  
+})
+
 // Linhas
 
 
@@ -275,8 +284,8 @@ var ranchos_pesca = $.ajax({
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
 $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
-  polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, LPM_DEMARCADA, 
-  LPM_HOMOLOGADA, LPM_PRESUMIDA, linhadecosta).done(function() {
+  nujuc, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
+  LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, linhadecosta).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -960,6 +969,22 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   
   */
   
+  var NUJUC = L.geoJSON(nujuc.responseJSON, {
+    style: {
+      color: 'red',
+      weight: 2,
+      dashArray: "20 20" 
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>ID: </b>" + feature.properties.ID + "<br>" +
+        "<b>Procedimento: </b>" + feature.properties.procedimento + "<br>" +
+        "<b>Resumo: </b>" + feature.properties.resumo + "<br>" +
+        "<b>Descrição: </b>" + feature.properties.descricao 
+      )
+    }
+  })
+  
   var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
     style: {
       color: 'red',
@@ -1182,7 +1207,8 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
 //      "Ocupações": Ocupacoes,
 //      "Certidões de Disponibilidade": CertDisp,
 //      "Autorizações de Obras": AutObras,
-      "TAUS": Pesca
+      "TAUS": Pesca,
+      "RESTRIÇÕES": NUJUC
     },
     "Terrenos de Marinha": {
       "Polígonos da União": POLUNIAO,
