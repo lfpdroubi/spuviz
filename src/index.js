@@ -280,12 +280,24 @@ var ranchos_pesca = $.ajax({
   }
 });  
 
+var consultasNUDEPU = $.ajax({
+  url:"https://raw.githubusercontent.com/NUDEPU/consultas/master/ilha_FLN.geojson",
+  dataType: "json",
+  success: console.log("Consultas NUDEPU data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
+
+
 
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
 $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   nujuc, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
-  LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, linhadecosta).done(function() {
+  LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, linhadecosta, 
+  consultasNUDEPU).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -984,6 +996,19 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       )
     }
   })
+  
+  var CONSULTASNUDEPU = L.geoJSON(consultasNUDEPU.responseJSON, {
+    style: {
+      color: 'red',
+      weight: 2,
+      dashArray: "20 20" 
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Obs.: </b>" + feature.properties.observacoes
+      )
+    }
+  }).addTo(map);
   
   var LLTM_DEM = L.geoJSON(LLTM_DEMARCADA.responseJSON, {
     style: {
