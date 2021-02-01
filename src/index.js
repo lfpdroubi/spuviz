@@ -100,7 +100,7 @@ var uc = $.ajax({
 
 // Portos públicos
 var portos = $.ajax({
-  url:"https://raw.githubusercontent.com/Cadastro-Marinho/BrasilData/master/portos.geojson",
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/portos.geojson",
   dataType: "json",
   success: console.log("Ports data successfully loaded."),
   error: function (xhr) {
