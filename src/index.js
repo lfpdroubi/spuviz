@@ -138,6 +138,17 @@ var municipios = $.ajax({
   }
 });
 
+
+// Itajai Waterway polygon (unofficial)
+var waterway = $.ajax({
+  url:"https://raw.githubusercontent.com/geoSPU/SPUData/master/poligono_canal_4326.geojson",
+  dataType: "json",
+  success: console.log("waterway data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
 // SPUData
 
 // Destinação
@@ -297,7 +308,7 @@ var consultasNUDEPU = $.ajax({
 $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   nujuc, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
   LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, linhadecosta, 
-  consultasNUDEPU).done(function() {
+  consultasNUDEPU, waterway).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -597,6 +608,21 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       }
   }).addTo(map);
   */
+  
+  var waterWay = L.geoJson(waterway.responseJSON, {
+      style: function (feature) {
+        return {
+          weight: 2,
+          opacity: 1,
+          color: 'yellow',
+          dashArray: '3',
+        };
+      }
+  }).addTo(map);
+
+  var oneHundredMetersOut = turf.buffer(linhadecosta.responseJSON, 200, { 
+    units: 'meters'
+  });
   
   // Camadas WMS do IBGE
   
