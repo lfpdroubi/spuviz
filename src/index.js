@@ -205,7 +205,7 @@ var nujuc = $.ajax({
   error: function (xhr) {
     alert(xhr.statusText);
   }  
-})
+});
 
 // Linhas
 
@@ -307,8 +307,8 @@ var consultasNUDEPU = $.ajax({
 // Add the variable for each of your AJAX requests to $.when()
 $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   nujuc, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
-  LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, linhadecosta, 
-  consultasNUDEPU, waterway).done(function() {
+  LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, consultasNUDEPU, 
+  waterway).done(function() {
   
   var WSM = L.tileLayer(
     'http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png', {
@@ -581,7 +581,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
           dashArray: '3',
         };
       }
-  }).addTo(map);
+  });
 
   var oneHundredMetersOut = turf.buffer(linhadecosta.responseJSON, 200, { 
     units: 'meters'
