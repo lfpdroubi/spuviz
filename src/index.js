@@ -306,7 +306,7 @@ var consultasNUDEPU = $.ajax({
 /* when().done() SECTION*/
 // Add the variable for each of your AJAX requests to $.when()
 $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
-  nujuc, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
+  nujuc, linhadecosta, polUniao, LLTM_DEMARCADA, LLTM_HOMOLOGADA, LLTM_PRESUMIDA, 
   LPM_DEMARCADA, LPM_HOMOLOGADA, LPM_PRESUMIDA, consultasNUDEPU, 
   waterway).done(function() {
   
