@@ -207,8 +207,20 @@ var nujuc = $.ajax({
   }  
 });
 
-// Linhas
+// Demarcacao
 
+// Manguezais
+
+var manguezais = $.ajax({
+  url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/manguezal_2015_babitonga.geojson",
+  dataType: "json",
+  success: console.log("Mangrove data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  }
+});
+
+// Poligonos da Uniao
 
 var polUniao = $.ajax({
   url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/Poligonos_LPM_Homologada.geojson",
@@ -218,6 +230,8 @@ var polUniao = $.ajax({
     alert(xhr.statusText);
   }
 });
+
+// Linhas
 
 var LLTM_DEMARCADA = $.ajax({
   url:"https://raw.githubusercontent.com/geoSPU/SPU-SC-NUDEM/master/linhas/LLTM_DEMARCADA.geojson",
@@ -808,6 +822,20 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     }
   }
   );
+  
+  var MANGUEZAIS = L.geoJSON(manguezais.responseJSON, {
+    style: {
+      color: 'DarkOliveGreen',
+      weight: 1
+    },
+    onEachFeature: function( feature, layer ){
+      layer.bindPopup(
+        "<b>Classe: </b>" + feature.properties.CLASSE + "<br>" +
+        "<b>Área: </b>" + feature.properties.AREA  + "m <sup>2</sup>"
+      );
+    }
+  }
+  );
 
   
   var UC = L.geoJSON(uc.responseJSON, {
@@ -1263,6 +1291,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
     },
     "Terrenos de Marinha": {
       "Polígonos da União": POLUNIAO,
+      "Manguezais": MANGUEZAIS,
       "LPM Homologada": LPM_HOM,
       "LPM Demarcada": LPM_DEM,
       "LPM Presumida": LPM_PRE,
