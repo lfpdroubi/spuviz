@@ -1508,7 +1508,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
       // Add to map after loading (default: true) ?
       addToMap: true,
       // File size limit in kb (default: 1024) ?
-      fileSizeLimit: 1024,
+      fileSizeLimit: 3072,
       // Restrict accepted file formats (default: .geojson, .json, .kml, and .gpx) ?
       formats: [
           '.geojson',
