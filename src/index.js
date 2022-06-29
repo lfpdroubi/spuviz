@@ -428,7 +428,11 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   }),
   geojsonOpts = {
     style: destStyle,
-			onEachFeature: function(feature, layer) {
+    pointToLayer: function(feature, latlng) {
+      if (feature.geometry.type === 'Point') {
+        return new L.marker(latlng);  
+      }
+      }, onEachFeature: function(feature, layer) {
 				return layer.bindPopup(
 				  "<b>RIP: </b>" + setDefaultVal(feature.properties.rip, '-') + "<br>" +
           "<b>Interessado: </b>" + feature.properties.interessado + "<br>" +
