@@ -659,6 +659,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
   // Meio Ambiente
   var UC_Estaduais = IBGE.getLayer('CGEO:AtlasMar_UC_Estaduais');
   var UC_Federais = IBGE.getLayer('CGEO:AtlasMar_UC_Federais');
+  var UC_Municipais = PMFLN.getLayer('ma_uc');
   var UProtIntegral = IBGE.getLayer('CGEO:IDS_17_Uni_de_Conserv_Protecao_Int_2_2');
 
   // Minérios
@@ -1339,6 +1340,7 @@ $.when(portos, aeroportos, cessoes, ocupacoes, certdisp, autobras, entregas,
 //      "Unidades de Conservação (IBGE)": UCs
       "Unidades de Conservação Estaduais": UC_Estaduais,
       "Unidades de Conservação Federais": UC_Federais,
+      "Unidades de Conservação Municipais": UC_Municipais,
       "Unidades de Conservação de Proteção Integral": UProtIntegral
     },
     "Batimetria (IBGE)": {
